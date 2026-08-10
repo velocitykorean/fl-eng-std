@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.env
+output/
+output_test/
+*.mp3
+*.mp4
+*.wav
+.DS_Store
+Thumbs.db
