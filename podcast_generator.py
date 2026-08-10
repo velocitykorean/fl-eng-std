@@ -95,7 +95,7 @@ REQUIREMENTS:
   {{"speaker": "Host2", "text": "Today we discuss how to **think** in English."}}
 ]"""
 
-    POLLINATIONS_API_KEY = os.getenv("POLLINATIONS_API_KEY") or "sk_K98O2j1UlpALX9TBAoAuEdqxL1hpB7zh"
+    POLLINATIONS_API_KEY = os.getenv("POLLINATIONS_API_KEY")
     headers = {"Authorization": f"Bearer {POLLINATIONS_API_KEY}"}
     for attempt in range(3):
         try:
@@ -423,11 +423,15 @@ async def run_full_generator(topic_index=0, custom_turns=130):
 def generate_youtube_metadata_ai(topic_name, keyword, ep_num, duration, turns, run_dir):
     """Generate viral YouTube title, description, and tags using Pollinations AI"""
 
-    POLLINATIONS_API_KEY = os.getenv("POLLINATIONS_API_KEY") or "sk_B0I1QMA8hWP14sICrnx1S1pt8riQdpLZ"
+    POLLINATIONS_API_KEY = os.getenv("POLLINATIONS_API_KEY")
+    if not POLLINATIONS_API_KEY:
+        print("  ⚠️ POLLINATIONS_API_KEY not set, using fallback metadata")
+        return _fallback_metadata(topic_name, keyword, ep_num, duration, turns)
+
     headers = {"Authorization": f"Bearer {POLLINATIONS_API_KEY}"}
 
-    # Sample some turns for context
-    sample_turns = turns[:10] if len(turns) > 10 else turns
+    # Sample some turns for context - use actual script content
+    sample_turns = turns[:15] if len(turns) > 15 else turns
     turn_texts = [f"{t['speaker']}: {t['text']}" for t in sample_turns]
     turns_preview = "\n".join(turn_texts)
 
@@ -435,26 +439,31 @@ def generate_youtube_metadata_ai(topic_name, keyword, ep_num, duration, turns, r
 
 TOPIC: {topic_name}
 KEYWORD: {keyword}
-EPISODE: {ep_num}
+EPISODE NUMBER: {ep_num}
 DURATION: {int(duration/60)} minutes
+CHANNEL NAME: English Fluency Studio
 HOSTS: Emma (female) and Andrew (male) - slow American English podcast
 
-SAMPLE CONVERSATION:
+ACTUAL SCRIPT CONTENT (first 15 lines):
 {turns_preview}
 
 Create a JSON object with these fields:
-1. "titles": Array of 5 viral YouTube title options (use power words like "Secret", "Native", "Fluently", "Daily", "Master", include emoji)
-2. "selected_title": The BEST title from the array (most clickable, SEO-optimized)
-3. "description": Full YouTube description (include timestamps placeholder, what viewers learn, subscribe CTA, hashtags, and make it engaging)
-4. "tags": Array of 12-15 SEO tags (mix broad and specific: "Learn English", "American English", topic-specific, etc.)
+1. "titles": Array of 5 viral YouTube title options
+2. "selected_title": The BEST title from the array
+3. "description": Full YouTube description (500+ words)
+4. "tags": Array of 12-15 SEO tags
 
-IMPORTANT RULES:
-- Titles MUST be clickable and viral (like top English learning channels)
-- Description must be 500+ words with clear sections
-- Use power words: "Secret", "Proven", "Native", "Fluent", "Daily"
-- Include relevant hashtags
-- Make it sound professional but engaging
-- Episode number must appear in at least 2 title options
+STRICT RULES - VIOLATION = REJECTION:
+- The word "English" MUST appear in every title
+- The channel name "English Fluency Studio" MUST appear in the description
+- Episode number {ep_num} MUST be mentioned in the description
+- The topic "{topic_name}" MUST be referenced in the description
+- DO NOT invent fake statistics, viewer counts, or subscriber numbers
+- DO NOT claim specific episode counts unless given
+- DO NOT add social media handles that don't exist
+- Description must accurately reflect the ACTUAL content of this episode
+- Use power words: "Secret", "Proven", "Native", "Fluent", "Daily", "Master"
+- Include relevant hashtags at the end of description
 
 Return ONLY valid JSON, no markdown."""
 
@@ -463,10 +472,10 @@ Return ONLY valid JSON, no markdown."""
             resp = requests.post("https://gen.pollinations.ai/v1/chat/completions", json={
                 "model": "gemini-fast",
                 "messages": [
-                    {"role": "system", "content": "You are a YouTube SEO expert who creates viral titles and descriptions for English learning channels. Return only valid JSON."},
+                    {"role": "system", "content": "You are a YouTube SEO expert who creates viral titles and descriptions for the English Fluency Studio channel. You NEVER hallucinate statistics or make false claims. Return only valid JSON."},
                     {"role": "user", "content": prompt}
                 ],
-                "temperature": 0.9
+                "temperature": 0.8
             }, headers=headers, timeout=120)
             resp.raise_for_status()
             content = resp.json()["choices"][0]["message"]["content"].strip()
@@ -478,13 +487,27 @@ Return ONLY valid JSON, no markdown."""
 
             ai_metadata = json.loads(content)
 
-            # Ensure required fields
+            # Validate: title must contain topic-relevant words
+            selected_title = ai_metadata.get("selected_title", "")
+            if topic_name.lower() not in selected_title.lower() and keyword.lower() not in selected_title.lower():
+                print(f"  ⚠️ Title doesn't match topic, retrying...")
+                continue
+
+            # Ensure required fields with fallbacks
             ai_metadata.setdefault("titles", [])
             ai_metadata.setdefault("selected_title", ai_metadata["titles"][0] if ai_metadata["titles"] else f"English Fluency Studio - {topic_name} | Episode {ep_num}")
             ai_metadata.setdefault("description", "")
             ai_metadata.setdefault("tags", ["Learn English", "American English", "English Fluency", "Slow English"])
 
-            # Add extra fields
+            # Ensure description mentions channel name
+            if "english fluency studio" not in ai_metadata["description"].lower():
+                ai_metadata["description"] = f"🎙️ English Fluency Studio Podcast - Episode {ep_num}\n\n" + ai_metadata["description"]
+
+            # Ensure episode number is in description
+            if str(ep_num) not in ai_metadata["description"]:
+                ai_metadata["description"] = ai_metadata["description"] + f"\n\n📌 Episode: {ep_num}"
+
+            # Add metadata fields
             ai_metadata["topic"] = topic_name
             ai_metadata["keyword"] = keyword
             ai_metadata["episode"] = ep_num
@@ -499,16 +522,47 @@ Return ONLY valid JSON, no markdown."""
             print(f"  ⚠️ AI metadata attempt {attempt+1} failed: {e}")
 
     # Fallback to basic metadata
-    print(f"  ⚠️ Using fallback metadata")
+    return _fallback_metadata(topic_name, keyword, ep_num, duration, turns)
+
+
+def _fallback_metadata(topic_name, keyword, ep_num, duration, turns):
+    """Fallback metadata when AI fails - always accurate"""
     return {
         "titles": [
             f"Slow American English Podcast - {topic_name} | Episode {ep_num}",
             f"Learn American English - {topic_name} | Speak Fluently",
             f"English Fluency Studio - {topic_name} | Slow & Clear",
+            f"Master American English - {topic_name} | Daily Podcast Ep {ep_num}",
         ],
         "selected_title": f"Slow American English Podcast - {topic_name} | Episode {ep_num}",
-        "description": f"🎙️ English Fluency Studio Podcast - Episode {ep_num}\n\nIn this episode, we discuss: {topic_name}\n\nA slow, clear American English podcast for learners.",
-        "tags": ["Learn English", "American English", "English Fluency", "Slow English", "English Podcast"],
+        "description": f"""🎙️ English Fluency Studio Podcast - Episode {ep_num}
+
+In this episode, we discuss: {topic_name}
+
+This is a slow, clear American English podcast designed for English learners. Two hosts (Emma and Andrew) have a natural conversation at a pace that's easy to follow.
+
+🎯 WHAT YOU'LL LEARN:
+• Natural American English expressions
+• Slow, clear pronunciation
+• Real conversational English
+• Everyday vocabulary and phrases
+
+💡 HOW TO USE THIS PODCAST:
+1. Listen actively while reading the text on screen
+2. Pause and repeat phrases out loud
+3. Practice shadowing (speak along with the hosts)
+4. Listen multiple times for better retention
+
+🔔 SUBSCRIBE for daily slow English podcasts!
+👍 LIKE this video if you found it helpful!
+💬 COMMENT which topics you want us to cover next!
+
+#EnglishFluency #LearnEnglish #AmericanEnglish #SlowEnglish #EnglishPodcast #SpeakEnglish #EnglishListening #EnglishPractice #FluencyStudio
+
+---
+© English Fluency Studio
+""",
+        "tags": ["Learn English", "American English", "English Fluency", "Slow English", "English Podcast", "Speak English", "English Listening", "Language Learning"],
         "topic": topic_name,
         "keyword": keyword,
         "episode": ep_num,
