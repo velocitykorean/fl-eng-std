@@ -212,11 +212,17 @@ async def generate_audio_edge(turns, run_dir):
     return audio_files
 
 def draw_animated_audio_waves(draw, start_x, start_y, frame_index=0):
-    num_bars = 6
+    """Animated sound equalizer bars - different heights per frame"""
+    num_bars = 7
+    bar_width = 5
+    gap = 7
     for i in range(num_bars):
-        h = int(24 + 14 * math.sin(frame_index * 0.6 + i * 1.1))
-        x = start_x + i * 9
-        draw.rounded_rectangle([(x, start_y - h//2), (x + 5, start_y + h//2)], radius=2, fill=YELLOW)
+        # Each bar pulses at different frequency for realistic equalizer look
+        h = int(18 + 16 * abs(math.sin(frame_index * 0.4 + i * 1.3)))
+        x = start_x + i * (bar_width + gap)
+        y_top = start_y - h // 2
+        y_bot = start_y + h // 2
+        draw.rounded_rectangle([(x, y_top), (x + bar_width, y_bot)], radius=2, fill=YELLOW)
 
 def draw_vector_mic(draw, center_x, center_y):
     draw.rounded_rectangle([(center_x - 6, center_y - 12), (center_x + 6, center_y + 4)], radius=4, fill=YELLOW)
@@ -251,7 +257,7 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
     draw.text((1620, 75), f"HOST: {speaker_name}", fill=YELLOW, font=font_speaker, anchor="lm")
 
     # 3. HUGE 2-LINE TEXT DISPLAY - CENTERED on right side, NO cropping
-    font_main = load_font(75, bold=True)
+    font_main = load_font(90, bold=True)
     text = turn["text"]
     
     pattern = r'(\*\*.*?\*\*)'
@@ -427,7 +433,7 @@ async def run_full_generator(topic_index=0, custom_turns=360):
     topic_name = topic_item["topic"]
     keyword = topic_item["keyword"]
 
-    print(f"  🤖 Generating AI-powered YouTube title & description...")
+    print(f"  Generating AI-powered YouTube title & description...")
     metadata = generate_youtube_metadata_ai(topic_name, keyword, ep_num, duration, turns, run_dir)
 
     metadata_path = run_dir / "youtube_metadata.json"

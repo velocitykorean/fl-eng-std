@@ -32,8 +32,7 @@ def load_bold_font(size):
 
 def create_thumbnail(main_title, highlight_word="", subtitle="", ep_num=1, output_name="thumbnail.png", output_dir=None):
     """
-    CLEAN YouTube thumbnail - just background + 1 big bold word + episode pill.
-    No crowding, no extra text.
+    YouTube thumbnail with 2-3 bold words - eye-catching and clickable.
     """
     woman_base_path = ASSETS_DIR / "woman_base.png"
     if woman_base_path.exists():
@@ -42,48 +41,78 @@ def create_thumbnail(main_title, highlight_word="", subtitle="", ep_num=1, outpu
     else:
         canvas = Image.new("RGBA", (1920, 1080), DARK_BG)
 
-    # Dark gradient overlay on right side for text legibility
-    gradient_overlay = Image.new("RGBA", (1920, 1080), (0, 0, 0, 0))
-    gdraw = ImageDraw.Draw(gradient_overlay)
-    for x in range(700, 1920):
-        alpha = int(200 * ((x - 700) / 1220) ** 1.3)
+    # Dark gradient on right
+    gradient = Image.new("RGBA", (1920, 1080), (0, 0, 0, 0))
+    gdraw = ImageDraw.Draw(gradient)
+    for x in range(650, 1920):
+        alpha = int(220 * ((x - 650) / 1270) ** 1.2)
         gdraw.line([(x, 0), (x, 1080)], fill=(5, 5, 12, alpha))
-    canvas = Image.alpha_composite(canvas, gradient_overlay)
+    canvas = Image.alpha_composite(canvas, gradient)
 
     draw = ImageDraw.Draw(canvas)
 
-    # ONE big bold keyword - center right
-    font_huge = load_bold_font(160)
-    keyword = highlight_word.upper() if highlight_word else main_title.split()[0].upper()
+    # Format title into 2-3 lines with keyword highlighted
+    words = main_title.upper().split()
+    keyword_upper = highlight_word.upper() if highlight_word else ""
 
-    kb = draw.textbbox((0, 0), keyword, font=font_huge)
-    kw = kb[2] - kb[0]
-    kh = kb[3] - kb[1]
+    # Build lines - max 3 lines, big bold text
+    font_big = load_bold_font(130)
+    font_small = load_bold_font(110)
 
-    kx = 1300 - kw // 2
-    ky = 440
+    lines_text = []
+    curr_line = []
+    for w in words:
+        test = curr_line + [w]
+        test_str = " ".join(test)
+        wb = draw.textbbox((0, 0), test_str, font=font_big)
+        tw = wb[2] - wb[0]
+        if tw > 900 and curr_line:
+            lines_text.append(curr_line)
+            curr_line = [w]
+        else:
+            curr_line.append(w)
+    if curr_line:
+        lines_text.append(curr_line)
 
-    # Heavy shadow for pop
-    shadow = Image.new('RGBA', canvas.size, (0, 0, 0, 0))
-    sdraw = ImageDraw.Draw(shadow)
-    for dx, dy in [(-5, -5), (5, -5), (-5, 5), (5, 5), (0, 10), (10, 0)]:
-        sdraw.text((kx + dx, ky + dy), keyword, fill=(0, 0, 0, 255), font=font_huge)
-    shadow = shadow.filter(ImageFilter.GaussianBlur(8))
-    canvas.paste(shadow, (0, 0), shadow)
+    # Draw each line centered-right
+    center_x = 1300
+    line_h = 150
+    total_h = len(lines_text) * line_h
+    start_y = 540 - total_h // 2
 
-    # Foreground keyword
-    draw = ImageDraw.Draw(canvas)
-    draw.text((kx, ky), keyword, fill=YELLOW, font=font_huge, stroke_width=5, stroke_fill=BLACK)
+    for l_idx, line_words in enumerate(lines_text):
+        line_str = " ".join(line_words)
+        # Check if this line contains the keyword
+        has_keyword = any(w.upper() == keyword_upper for w in line_words)
 
-    # Small episode pill bottom right
+        font_use = font_big if has_keyword else font_small
+        wb = draw.textbbox((0, 0), line_str, font=font_use)
+        lw = wb[2] - wb[0]
+        lx = center_x - lw // 2
+        ly = start_y + l_idx * line_h
+
+        # Shadow
+        shadow = Image.new('RGBA', canvas.size, (0, 0, 0, 0))
+        sdraw = ImageDraw.Draw(shadow)
+        for dx, dy in [(-4, -4), (4, -4), (-4, 4), (4, 4), (0, 8), (8, 0)]:
+            sdraw.text((lx + dx, ly + dy), line_str, fill=(0, 0, 0, 255), font=font_use)
+        shadow = shadow.filter(ImageFilter.GaussianBlur(6))
+        canvas.paste(shadow, (0, 0), shadow)
+
+        # Foreground
+        draw = ImageDraw.Draw(canvas)
+        color = YELLOW if has_keyword else WHITE
+        draw.text((lx, ly), line_str, fill=color, font=font_use, stroke_width=5, stroke_fill=BLACK)
+
+    # Episode pill
     font_pill = load_bold_font(36)
     pill_text = f"EP {ep_num}"
     pb = draw.textbbox((0, 0), pill_text, font=font_pill)
     pw = pb[2] - pb[0]
-    pill_x = 1920 - pw - 80
-    pill_y = 960
-    draw.rounded_rectangle([(pill_x - 20, pill_y - 10), (pill_x + pw + 20, pill_y + 50)], radius=12, fill=(255, 215, 0, 220))
-    draw.text((pill_x, pill_y), pill_text, fill=BLACK, font=font_pill)
+    px = 1920 - pw - 80
+    py = 960
+    draw.rounded_rectangle([(px - 20, py - 10), (px + pw + 20, py + 50)], radius=12, fill=(255, 215, 0, 220))
+    draw.text((px, py), pill_text, fill=BLACK, font=font_pill)
 
     # Save
     if output_dir:
