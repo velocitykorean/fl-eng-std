@@ -1,21 +1,10 @@
 name: English Fluency Studio - Daily Podcast Generator
 
 on:
-  # Schedule: Generate and upload 1 podcast per day at 10 PM EST (3 AM UTC next day)
   schedule:
-    - cron: '0 3 * * *'  # 10:00 PM EST (3:00 AM UTC next day)
+    - cron: '0 3 * * *'
 
-  # Allow manual trigger for testing
   workflow_dispatch:
-    inputs:
-      topic:
-        description: 'Topic index (0-9, random if empty)'
-        required: false
-        default: ''
-      turns:
-        description: 'Number of turns (default: 130 for ~30 min)'
-        required: false
-        default: '130'
 
 jobs:
   generate-podcast:
