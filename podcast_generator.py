@@ -399,7 +399,7 @@ def assemble_video(turns, audio_files, run_dir):
 
     return final_video, total_duration
 
-async def run_full_generator(topic_index=0, custom_turns=360):
+async def run_full_generator(topic_index=0, custom_turns=600):
     topic_item = TOPICS[topic_index % len(TOPICS)]
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_dir = OUTPUT_DIR / f"run_{timestamp}"
@@ -603,5 +603,5 @@ This is a slow, clear English podcast designed for English learners. Two hosts (
     }
 
 if __name__ == "__main__":
-    turns_cnt = 5 if len(sys.argv) > 1 and sys.argv[1] == "--test" else 360
+    turns_cnt = 5 if len(sys.argv) > 1 and sys.argv[1] == "--test" else 600
     asyncio.run(run_full_generator(topic_index=0, custom_turns=turns_cnt))
