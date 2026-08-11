@@ -1,5 +1,5 @@
 """
-SLOW AMERICAN ENGLISH PODCAST GENERATOR - FULL 30-MINUTE BROADCAST
+SLOW ENGLISH PODCAST GENERATOR - FULL 30-MINUTE BROADCAST
 Features:
 - 100% Native Edge TTS Microsoft Neural Voices:
   * Host 1 (Emma): en-US-AvaNeural (Ultra-realistic US Female Neural)
@@ -50,7 +50,7 @@ TOPICS = [
     {"topic": "How to Learn English Vocabulary Naturally", "keyword": "VOCABULARY", "sub": "REMEMBER WORDS EASILY"},
     {"topic": "Small Talk and Everyday English Conversations", "keyword": "CONVERSATIONS", "sub": "SPEAK NATURALLY IN ANY SITUATION"},
     {"topic": "Mastering American Accent Pronunciation and Rhythm", "keyword": "PRONUNCIATION", "sub": "SOUND MORE NATURAL"},
-    {"topic": "Traveling in the USA and Exploring American Culture", "keyword": "TRAVELING", "sub": "AMERICAN ENGLISH FOR TRAVEL"},
+    {"topic": "Traveling in the USA and Exploring American Culture", "keyword": "TRAVELING", "sub": "ENGLISH FOR TRAVEL"},
     {"topic": "Work, Business, and Professional English Basics", "keyword": "CAREER", "sub": "BOOST YOUR PROFESSIONAL ENGLISH"},
     {"topic": "The Secret to Fluency: Consistency Over Perfection", "keyword": "FLUENCY", "sub": "THE PATH TO REAL FLUENCY"}
 ]
@@ -86,24 +86,34 @@ def clean_text(text):
 
 def generate_script(topic_item, target_turns=130):
     topic_str = topic_item["topic"]
-    print(f"Generating full 30-minute English script for: '{topic_str}' ({target_turns} turns)...")
+    print(f"Generating full 30-minute English podcast script for: '{topic_str}' ({target_turns} turns)...")
 
-    prompt = f"""Generate a full 30-minute Slow English Podcast script for English learners.
+    prompt = f"""Generate a realistic 30-minute English learning podcast script.
 Topic: {topic_str}
 
 HOSTS strictly alternate:
-- Emma (Host1): Primary American female host & teacher.
-- Andrew (Host2): American male co-host.
+- Emma (Host1): Warm, friendly female English teacher.
+- Andrew (Host2): Engaging male co-host.
 
-REQUIREMENTS:
-1. Each turn MUST be short (1 sentence, 6-12 words) so it fits in HUGE 2-line text on screen!
-2. Use standard English vocabulary and natural expressions.
-3. Wrap exactly 1 key word per turn in double asterisks like **keyword**.
-4. Output EXACTLY {target_turns} turns as a clean JSON array:
+REQUIREMENTS - THIS IS CRITICAL:
+1. Write like a REAL podcast conversation. Each turn should be 2-3 complete sentences (20-35 words).
+2. Hosts react to each other naturally - one host says something, the other responds, asks a question, agrees, gives examples.
+3. Include natural conversation markers: "That's a great point", "Let me give you an example", "Actually, I've noticed that", "So what I mean is..."
+4. Use clear, standard English vocabulary at a pace learners can follow.
+5. Wrap exactly 1 key word per turn in double asterisks like **keyword**.
+6. Output EXACTLY {target_turns} turns as a clean JSON array:
 [
-  {{"speaker": "Host1", "text": "Welcome to **English** Podcast."}},
-  {{"speaker": "Host2", "text": "Today we discuss how to **think** in English."}}
-]"""
+  {{"speaker": "Host1", "text": "Welcome back to the podcast! Today we're going to explore **why** thinking in English is the key to fluency."}},
+  {{"speaker": "Host2", "text": "That's such a great topic. I remember when I first tried to stop translating in my head, and honestly, it felt **impossible** at first."}}
+]
+
+EXAMPLE of natural back-and-forth:
+Emma: "Have you ever noticed how children learn a language without any grammar rules?"
+Andrew: "That's a really interesting point, Emma. They just listen, repeat, and make mistakes."
+Emma: "Exactly! And that's what I want to teach our listeners today, the natural way to learn."
+Andrew: "So should we start with a simple listening exercise for them?"
+
+Write this style of natural dialogue. NEVER use one-word or super short turns."""
 
     POLLINATIONS_API_KEY = os.getenv("POLLINATIONS_API_KEY")
     headers = {"Authorization": f"Bearer {POLLINATIONS_API_KEY}"}
@@ -112,7 +122,7 @@ REQUIREMENTS:
             resp = requests.post("https://gen.pollinations.ai/v1/chat/completions", json={
                 "model": "gemini-fast",
                 "messages": [
-                    {"role": "system", "content": "You write short 1-sentence English podcast turns for ESL learners. Wrap 1 key word per turn in **keyword**."},
+                    {"role": "system", "content": "You write realistic, natural English learning podcast dialogue. Turns are 2-3 sentences (20-35 words) with hosts reacting to each other. Wrap 1 key word per turn in **keyword**."},
                     {"role": "user", "content": prompt}
                 ],
                 "temperature": 0.85
@@ -155,14 +165,14 @@ def _fallback_script(topic_str, target_turns=130):
     for i in range(target_turns):
         s = "Host1" if i % 2 == 0 else "Host2"
         if s == "Host1":
-            script.append({"speaker": "Host1", "text": f"Welcome to **English** Podcast."})
+            script.append({"speaker": "Host1", "text": f"Welcome back to the podcast! Today we're going to explore **{topic_str}** in a way that's easy to understand."})
         else:
-            script.append({"speaker": "Host2", "text": f"Let us master **{topic_str}** together."})
+            script.append({"speaker": "Host2", "text": f"That's a great topic to cover. Let's break it down step by step and give our listeners some **practical** tips they can use today."})
     return script
 
 async def generate_audio_edge(turns, run_dir):
     """
-    Generates 100% NATIVE AMERICAN ENGLISH VOICE AUDIO via Edge TTS Neural:
+    Generates 100% NATIVE ENGLISH VOICE AUDIO via Edge TTS Neural:
     - Host 1 (Emma): en-US-AvaNeural (US Female Neural)
     - Host 2 (Andrew): en-US-AndrewNeural (US Male Neural)
     """
@@ -170,7 +180,7 @@ async def generate_audio_edge(turns, run_dir):
     audio_dir.mkdir(parents=True, exist_ok=True)
     audio_files = []
 
-    print(f"Generating 100% NATIVE AMERICAN ENGLISH Edge TTS Neural audio for {len(turns)} turns...")
+    print(f"Generating 100% NATIVE ENGLISH Edge TTS Neural audio for {len(turns)} turns...")
     for i, turn in enumerate(turns):
         mp3_path = audio_dir / f"audio_{i:04d}.mp3"
         spoken_text = re.sub(r'\*\*(.*?)\*\*', r'\1', turn["text"])
@@ -256,10 +266,9 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
     draw_vector_mic(draw, 1580, 75)
     draw.text((1620, 75), f"HOST: {speaker_name}", fill=YELLOW, font=font_speaker, anchor="lm")
 
-    # 3. HUGE 2-LINE TEXT DISPLAY - CENTERED on right side, NO cropping
-    font_main = load_font(90, bold=True)
+    # 3. MAIN TEXT DISPLAY - auto-fit, centered, NEVER crops
     text = turn["text"]
-    
+
     pattern = r'(\*\*.*?\*\*)'
     parts = re.split(pattern, text)
     words_list = []
@@ -270,49 +279,49 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
             for w in p.split(' '):
                 if w: words_list.append((w, False))
 
-    # Text area: x=780 to x=1820 (safe zone, no cropping)
-    text_area_left = 780
-    text_area_right = 1820
-    max_w = text_area_right - text_area_left  # 1040px
-    text_center_x = (text_area_left + text_area_right) // 2  # 1300
+    # Safe text area (avoid host image on left, safe margin on right)
+    text_area_left = 800
+    text_area_right = 1790
+    text_center_x = (text_area_left + text_area_right) // 2
+    max_line_w = text_area_right - text_area_left
 
-    lines = []
-    curr_line = []
-    curr_w = 0
-
-    for word, is_yellow in words_list:
-        wb = draw.textbbox((0, 0), word, font=font_main)
-        wl = wb[2] - wb[0] + 16
-        if curr_w + wl <= max_w or not curr_line:
-            curr_line.append((word, is_yellow, wl))
-            curr_w += wl
-        else:
+    def wrap_words(font):
+        """Wrap words into up to 3 lines using the given font. Returns (lines, line_widths) or None if impossible."""
+        lines = []
+        curr_line = []
+        curr_w = 0
+        for word, is_yellow in words_list:
+            wb = draw.textbbox((0, 0), word, font=font)
+            wl = wb[2] - wb[0] + 12
+            if curr_w + wl > max_line_w and curr_line:
+                lines.append((curr_line, curr_w))
+                curr_line = [(word, is_yellow, wl)]
+                curr_w = wl
+            else:
+                curr_line.append((word, is_yellow, wl))
+                curr_w += wl
+        if curr_line:
             lines.append((curr_line, curr_w))
-            curr_line = [(word, is_yellow, wl)]
-            curr_w = wl
-    if curr_line:
-        lines.append((curr_line, curr_w))
+        return lines
 
-    # Max 2 lines - if more, split evenly
-    if len(lines) > 2:
-        mid = len(words_list) // 2
-        l1, l2 = words_list[:mid], words_list[mid:]
-        def calc_line(w_list):
-            w_total = 0
-            res = []
-            for w, y in w_list:
-                wb = draw.textbbox((0, 0), w, font=font_main)
-                wl = wb[2] - wb[0] + 16
-                res.append((w, y, wl))
-                w_total += wl
-            return res, w_total
-        line1, w1 = calc_line(l1)
-        line2, w2 = calc_line(l2)
-        lines = [(line1, w1), (line2, w2)]
+    # Auto-fit: start big, shrink until text fits in <=3 lines and every line fits
+    font_size = 95
+    lines = None
+    while font_size >= 40:
+        font_main = load_font(font_size, bold=True)
+        lines = wrap_words(font_main)
+        # Check all lines fit and we have <=3 lines
+        if len(lines) <= 3 and all(w <= max_line_w for _, w in lines):
+            break
+        font_size -= 5
 
-    center_y = 520
-    line_h = 120
+    if lines is None or (len(lines) > 3):
+        font_main = load_font(45, bold=True)
+        lines = wrap_words(font_main)
+
+    line_h = int(font_size * 1.35)
     total_h = len(lines) * line_h
+    center_y = 500
     start_y = center_y - total_h // 2
 
     # Blur Shadow
@@ -329,7 +338,7 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
     shadow_layer = shadow_layer.filter(ImageFilter.GaussianBlur(4))
     canvas.paste(shadow_layer, (0, 0), shadow_layer)
 
-    # Foreground Huge Text
+    # Foreground Text
     draw = ImageDraw.Draw(canvas)
     for l_idx, (line_words, line_w) in enumerate(lines):
         start_x = text_center_x - line_w // 2
@@ -399,14 +408,14 @@ def assemble_video(turns, audio_files, run_dir):
 
     return final_video, total_duration
 
-async def run_full_generator(topic_index=0, custom_turns=600):
+async def run_full_generator(topic_index=0, custom_turns=210):
     topic_item = TOPICS[topic_index % len(TOPICS)]
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_dir = OUTPUT_DIR / f"run_{timestamp}"
     run_dir.mkdir(parents=True, exist_ok=True)
 
     print("=" * 70)
-    print("  SLOW AMERICAN ENGLISH PODCAST GENERATOR (Edge TTS Neural)")
+    print("  SLOW ENGLISH PODCAST GENERATOR (Edge TTS Neural)")
     print(f"  Topic: {topic_item['topic']}")
     print(f"  Target Turns: {custom_turns} (~30 Minutes)")
     print("=" * 70)
@@ -422,7 +431,7 @@ async def run_full_generator(topic_index=0, custom_turns=600):
     thumb_path = create_thumbnail(
         main_title=topic_item["topic"].upper(),
         highlight_word=topic_item["keyword"],
-        subtitle="SLOW AMERICAN ENGLISH PODCAST",
+        subtitle="SLOW ENGLISH PODCAST",
         ep_num=random.randint(1, 99),
         output_name=f"thumbnail_{timestamp}.png",
         output_dir=str(run_dir)
@@ -588,7 +597,7 @@ This is a slow, clear English podcast designed for English learners. Two hosts (
 👍 LIKE this video if you found it helpful!
 💬 COMMENT which topics you want us to cover next!
 
-#EnglishFluency #LearnEnglish #AmericanEnglish #SlowEnglish #EnglishPodcast #SpeakEnglish #EnglishListening #EnglishPractice #FluencyStudio
+#EnglishFluency #LearnEnglish #EnglishPodcast #SlowEnglish #SpeakEnglish #EnglishListening #EnglishPractice #FluencyStudio
 
 ---
 © English Fluency Studio
@@ -603,5 +612,5 @@ This is a slow, clear English podcast designed for English learners. Two hosts (
     }
 
 if __name__ == "__main__":
-    turns_cnt = 5 if len(sys.argv) > 1 and sys.argv[1] == "--test" else 600
+    turns_cnt = 5 if len(sys.argv) > 1 and sys.argv[1] == "--test" else 210
     asyncio.run(run_full_generator(topic_index=0, custom_turns=turns_cnt))
