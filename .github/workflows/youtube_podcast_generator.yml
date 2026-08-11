@@ -1,0 +1,105 @@
+name: English Fluency Studio - Daily Podcast Generator
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  generate-podcast:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu fonts-freefont-ttf
+          sudo fc-cache -fv
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Create .env file from secrets
+        run: |
+          echo "POLLINATIONS_API_KEY=${{ secrets.POLLINATIONS_API_KEY }}" >> .env
+          echo "AI_MODEL=${{ secrets.AI_MODEL || 'gemini-fast' }}" >> .env
+          echo "YT_CLIENT_ID=${{ secrets.YT_CLIENT_ID }}" >> .env
+          echo "YT_CLIENT_SECRET=${{ secrets.YT_CLIENT_SECRET }}" >> .env
+          echo "YT_REFRESH_TOKEN=${{ secrets.YT_REFRESH_TOKEN }}" >> .env
+
+      - name: Generate 30-Minute Podcast Video
+        id: generate
+        run: |
+          echo "Starting podcast generation..."
+
+          TOPIC_INDEX="${{ github.event.inputs.topic }}"
+          TURNS="${{ github.event.inputs.turns }}"
+
+          if [ -z "$TOPIC_INDEX" ]; then
+            TOPIC_INDEX=$(python -c "import random; print(random.randint(0, 9))")
+          fi
+
+          if [ -z "$TURNS" ]; then
+            TURNS=130
+          fi
+
+          python -c "
+          import asyncio
+          from podcast_generator import run_full_generator
+          asyncio.run(run_full_generator(topic_index=$TOPIC_INDEX, custom_turns=$TURNS))
+          "
+
+          LATEST_DIR=$(ls -td output/run_*/ | head -1)
+          echo "LATEST_PODCAST_DIR=$LATEST_DIR" >> $GITHUB_OUTPUT
+
+      - name: Upload to YouTube
+        id: youtube-upload
+        continue-on-error: true
+        run: |
+          LATEST_DIR="${{ steps.generate.outputs.LATEST_PODCAST_DIR }}"
+
+          if [ ! -f "${LATEST_DIR}podcast_30min_final.mp4" ]; then
+            echo "Video file not found"
+            exit 1
+          fi
+
+          export YT_CLIENT_ID="${{ secrets.YT_CLIENT_ID }}"
+          export YT_CLIENT_SECRET="${{ secrets.YT_CLIENT_SECRET }}"
+          export YT_REFRESH_TOKEN="${{ secrets.YT_REFRESH_TOKEN }}"
+          export PYTHONPATH="${{ github.workspace }}/upload:$PYTHONPATH"
+
+          cd upload
+          python upload_youtube_longform.py
+
+          if [ -f "${LATEST_DIR}youtube_upload_result.json" ]; then
+            VIDEO_ID=$(python -c "import json; print(json.load(open('${LATEST_DIR}youtube_upload_result.json'))['video_id'])" 2>/dev/null || echo "Unknown")
+            echo "VIDEO_ID=$VIDEO_ID" >> $GITHUB_OUTPUT
+          fi
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          GITHUB_ACTIONS: "true"
+
+      - name: Upload Video Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: english-fluency-podcast-${{ github.run_number }}
+          path: |
+            ${{ steps.generate.outputs.LATEST_PODCAST_DIR }}podcast_30min_final.mp4
+            ${{ steps.generate.outputs.LATEST_PODCAST_DIR }}thumbnail_*.png
+            ${{ steps.generate.outputs.LATEST_PODCAST_DIR }}youtube_metadata.json
+          retention-days: 7
