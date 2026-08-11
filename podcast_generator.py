@@ -84,36 +84,25 @@ def clean_text(text):
     text = re.sub(r'\s+', ' ', text).strip()
     return text
 
-def generate_script(topic_item, target_turns=130):
+def generate_script(topic_item, target_turns=210):
     topic_str = topic_item["topic"]
     print(f"Generating full 30-minute English podcast script for: '{topic_str}' ({target_turns} turns)...")
 
-    prompt = f"""Generate a realistic 30-minute English learning podcast script.
-Topic: {topic_str}
+    prompt = f"""Write {target_turns} turns of a realistic English learning podcast between Emma and Andrew discussing: {topic_str}
 
-HOSTS strictly alternate:
-- Emma (Host1): Warm, friendly female English teacher.
-- Andrew (Host2): Engaging male co-host.
+RULES:
+- Each turn MUST be 2-4 sentences, 16-30 words
+- Hosts react to and build on each other's points naturally
+- Natural flow: questions, agreements, examples, short personal stories
+- Wrap exactly 1 key word per turn in **asterisks**
+- Use clear, standard English learners can follow
 
-REQUIREMENTS - THIS IS CRITICAL:
-1. Write like a REAL podcast conversation. Each turn should be 2-3 complete sentences (20-35 words).
-2. Hosts react to each other naturally - one host says something, the other responds, asks a question, agrees, gives examples.
-3. Include natural conversation markers: "That's a great point", "Let me give you an example", "Actually, I've noticed that", "So what I mean is..."
-4. Use clear, standard English vocabulary at a pace learners can follow.
-5. Wrap exactly 1 key word per turn in double asterisks like **keyword**.
-6. Output EXACTLY {target_turns} turns as a clean JSON array:
-[
-  {{"speaker": "Host1", "text": "Welcome back to the podcast! Today we're going to explore **why** thinking in English is the key to fluency."}},
-  {{"speaker": "Host2", "text": "That's such a great topic. I remember when I first tried to stop translating in my head, and honestly, it felt **impossible** at first."}}
-]
+Return as clean JSON array only, no other text:
+[{{"speaker":"Host1","text":"..."}},{{"speaker":"Host2","text":"..."}}]
 
-EXAMPLE of natural back-and-forth:
-Emma: "Have you ever noticed how children learn a language without any grammar rules?"
-Andrew: "That's a really interesting point, Emma. They just listen, repeat, and make mistakes."
-Emma: "Exactly! And that's what I want to teach our listeners today, the natural way to learn."
-Andrew: "So should we start with a simple listening exercise for them?"
-
-Write this style of natural dialogue. NEVER use one-word or super short turns."""
+Example:
+[{{"speaker":"Host1","text":"Welcome back everyone! Today we are exploring why thinking directly in English is the **secret** to real fluency."}},
+ {{"speaker":"Host2","text":"That is such a great topic. Many learners translate in their heads first, and honestly it slows them down **so** much."}}]"""
 
     POLLINATIONS_API_KEY = os.getenv("POLLINATIONS_API_KEY")
     headers = {"Authorization": f"Bearer {POLLINATIONS_API_KEY}"}
@@ -408,7 +397,7 @@ def assemble_video(turns, audio_files, run_dir):
 
     return final_video, total_duration
 
-async def run_full_generator(topic_index=0, custom_turns=210):
+async def run_full_generator(topic_index=0, custom_turns=170):
     topic_item = TOPICS[topic_index % len(TOPICS)]
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_dir = OUTPUT_DIR / f"run_{timestamp}"
@@ -612,5 +601,5 @@ This is a slow, clear English podcast designed for English learners. Two hosts (
     }
 
 if __name__ == "__main__":
-    turns_cnt = 5 if len(sys.argv) > 1 and sys.argv[1] == "--test" else 210
+    turns_cnt = 5 if len(sys.argv) > 1 and sys.argv[1] == "--test" else 170
     asyncio.run(run_full_generator(topic_index=0, custom_turns=turns_cnt))
