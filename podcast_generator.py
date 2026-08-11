@@ -43,15 +43,15 @@ VOICE_RATE = "-15%"
 
 # Topics List
 TOPICS = [
-    {"topic": "How to Think Directly in American English Without Translating", "keyword": "THINK", "sub": "STOP TRANSLATING IN YOUR HEAD"},
-    {"topic": "Building Confidence to Speak American English Everyday", "keyword": "CONFIDENCE", "sub": "SPEAK WITHOUT FEAR"},
-    {"topic": "The Power of Daily American English Listening Habits", "keyword": "HABITS", "sub": "IMPROVE YOUR LISTENING FAST"},
-    {"topic": "Overcoming the Fear of Making Mistakes in American English", "keyword": "MISTAKES", "sub": "LEARN FROM EVERY MISTAKE"},
-    {"topic": "How to Learn American English Vocabulary Naturally", "keyword": "VOCABULARY", "sub": "REMEMBER WORDS EASILY"},
-    {"topic": "Small Talk and Everyday American English Conversations", "keyword": "CONVERSATIONS", "sub": "SPEAK NATURALLY IN ANY SITUATION"},
+    {"topic": "How to Think Directly in English Without Translating", "keyword": "THINK", "sub": "STOP TRANSLATING IN YOUR HEAD"},
+    {"topic": "Building Confidence to Speak English Everyday", "keyword": "CONFIDENCE", "sub": "SPEAK WITHOUT FEAR"},
+    {"topic": "The Power of Daily English Listening Habits", "keyword": "HABITS", "sub": "IMPROVE YOUR LISTENING FAST"},
+    {"topic": "Overcoming the Fear of Making Mistakes in English", "keyword": "MISTAKES", "sub": "LEARN FROM EVERY MISTAKE"},
+    {"topic": "How to Learn English Vocabulary Naturally", "keyword": "VOCABULARY", "sub": "REMEMBER WORDS EASILY"},
+    {"topic": "Small Talk and Everyday English Conversations", "keyword": "CONVERSATIONS", "sub": "SPEAK NATURALLY IN ANY SITUATION"},
     {"topic": "Mastering American Accent Pronunciation and Rhythm", "keyword": "PRONUNCIATION", "sub": "SOUND MORE NATURAL"},
     {"topic": "Traveling in the USA and Exploring American Culture", "keyword": "TRAVELING", "sub": "AMERICAN ENGLISH FOR TRAVEL"},
-    {"topic": "Work, Business, and Professional American English Basics", "keyword": "CAREER", "sub": "BOOST YOUR PROFESSIONAL ENGLISH"},
+    {"topic": "Work, Business, and Professional English Basics", "keyword": "CAREER", "sub": "BOOST YOUR PROFESSIONAL ENGLISH"},
     {"topic": "The Secret to Fluency: Consistency Over Perfection", "keyword": "FLUENCY", "sub": "THE PATH TO REAL FLUENCY"}
 ]
 
@@ -86,9 +86,9 @@ def clean_text(text):
 
 def generate_script(topic_item, target_turns=130):
     topic_str = topic_item["topic"]
-    print(f"Generating full 30-minute American English script for: '{topic_str}' ({target_turns} turns)...")
+    print(f"Generating full 30-minute English script for: '{topic_str}' ({target_turns} turns)...")
 
-    prompt = f"""Generate a full 30-minute Slow American English Podcast script for English learners.
+    prompt = f"""Generate a full 30-minute Slow English Podcast script for English learners.
 Topic: {topic_str}
 
 HOSTS strictly alternate:
@@ -97,11 +97,11 @@ HOSTS strictly alternate:
 
 REQUIREMENTS:
 1. Each turn MUST be short (1 sentence, 6-12 words) so it fits in HUGE 2-line text on screen!
-2. Use standard American English vocabulary and natural expressions.
+2. Use standard English vocabulary and natural expressions.
 3. Wrap exactly 1 key word per turn in double asterisks like **keyword**.
 4. Output EXACTLY {target_turns} turns as a clean JSON array:
 [
-  {{"speaker": "Host1", "text": "Welcome to **American English** Podcast."}},
+  {{"speaker": "Host1", "text": "Welcome to **English** Podcast."}},
   {{"speaker": "Host2", "text": "Today we discuss how to **think** in English."}}
 ]"""
 
@@ -112,7 +112,7 @@ REQUIREMENTS:
             resp = requests.post("https://gen.pollinations.ai/v1/chat/completions", json={
                 "model": "gemini-fast",
                 "messages": [
-                    {"role": "system", "content": "You write short 1-sentence American English podcast turns for ESL learners. Wrap 1 key word per turn in **keyword**."},
+                    {"role": "system", "content": "You write short 1-sentence English podcast turns for ESL learners. Wrap 1 key word per turn in **keyword**."},
                     {"role": "user", "content": prompt}
                 ],
                 "temperature": 0.85
@@ -155,7 +155,7 @@ def _fallback_script(topic_str, target_turns=130):
     for i in range(target_turns):
         s = "Host1" if i % 2 == 0 else "Host2"
         if s == "Host1":
-            script.append({"speaker": "Host1", "text": f"Welcome to **American English** Podcast."})
+            script.append({"speaker": "Host1", "text": f"Welcome to **English** Podcast."})
         else:
             script.append({"speaker": "Host2", "text": f"Let us master **{topic_str}** together."})
     return script
@@ -348,7 +348,7 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
     draw.line([(0, 1025), (bar_w, 1025)], fill=YELLOW, width=5)
 
     font_footer = load_font(30, bold=False)
-    draw.text((70, 1052), "Slow & Clear American English Accent", fill=MUTED_WHITE, font=font_footer, anchor="lm")
+    draw.text((70, 1052), "Slow & Clear English Accent", fill=MUTED_WHITE, font=font_footer, anchor="lm")
     
     min_str = f"{int(elapsed_time // 60):02d}:{int(elapsed_time % 60):02d} / {int(total_duration // 60):02d}:{int(total_duration % 60):02d}"
     draw.text((1850, 1052), min_str, fill=YELLOW, font=font_footer, anchor="rm")
@@ -473,7 +473,7 @@ KEYWORD: {keyword}
 EPISODE NUMBER: {ep_num}
 DURATION: {int(duration/60)} minutes
 CHANNEL NAME: English Fluency Studio
-HOSTS: Emma (female) and Andrew (male) - slow American English podcast
+HOSTS: Emma (female) and Andrew (male) - slow English podcast
 
 ACTUAL SCRIPT CONTENT (first 15 lines):
 {turns_preview}
@@ -528,7 +528,7 @@ Return ONLY valid JSON, no markdown."""
             ai_metadata.setdefault("titles", [])
             ai_metadata.setdefault("selected_title", ai_metadata["titles"][0] if ai_metadata["titles"] else f"English Fluency Studio - {topic_name} | Episode {ep_num}")
             ai_metadata.setdefault("description", "")
-            ai_metadata.setdefault("tags", ["Learn English", "American English", "English Fluency", "Slow English"])
+            ai_metadata.setdefault("tags", ["Learn English", "English", "English Fluency", "Slow English"])
 
             # Ensure description mentions channel name
             if "english fluency studio" not in ai_metadata["description"].lower():
@@ -560,20 +560,20 @@ def _fallback_metadata(topic_name, keyword, ep_num, duration, turns):
     """Fallback metadata when AI fails - always accurate"""
     return {
         "titles": [
-            f"Slow American English Podcast - {topic_name} | Episode {ep_num}",
-            f"Learn American English - {topic_name} | Speak Fluently",
+            f"Slow English Podcast - {topic_name} | Episode {ep_num}",
+            f"Learn English - {topic_name} | Speak Fluently",
             f"English Fluency Studio - {topic_name} | Slow & Clear",
-            f"Master American English - {topic_name} | Daily Podcast Ep {ep_num}",
+            f"Master English - {topic_name} | Daily Podcast Ep {ep_num}",
         ],
-        "selected_title": f"Slow American English Podcast - {topic_name} | Episode {ep_num}",
+        "selected_title": f"Slow English Podcast - {topic_name} | Episode {ep_num}",
         "description": f"""🎙️ English Fluency Studio Podcast - Episode {ep_num}
 
 In this episode, we discuss: {topic_name}
 
-This is a slow, clear American English podcast designed for English learners. Two hosts (Emma and Andrew) have a natural conversation at a pace that's easy to follow.
+This is a slow, clear English podcast designed for English learners. Two hosts (Emma and Andrew) have a natural conversation at a pace that's easy to follow.
 
 🎯 WHAT YOU'LL LEARN:
-• Natural American English expressions
+• Natural English expressions
 • Slow, clear pronunciation
 • Real conversational English
 • Everyday vocabulary and phrases
@@ -593,7 +593,7 @@ This is a slow, clear American English podcast designed for English learners. Tw
 ---
 © English Fluency Studio
 """,
-        "tags": ["Learn English", "American English", "English Fluency", "Slow English", "English Podcast", "Speak English", "English Listening", "Language Learning"],
+        "tags": ["Learn English", "English", "English Fluency", "Slow English", "English Podcast", "Speak English", "English Listening", "Language Learning"],
         "topic": topic_name,
         "keyword": keyword,
         "episode": ep_num,

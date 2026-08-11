@@ -109,7 +109,7 @@ def upload_to_youtube(podcast_info):
     youtube._http.timeout = 600
 
     # Get title and description from metadata
-    title = "English Fluency Studio - Slow American English Podcast"
+    title = "English Fluency Studio - Slow English Podcast"
     description = ""
     tags = []
 
@@ -134,7 +134,7 @@ def upload_to_youtube(podcast_info):
             "description": description,
             "tags": tags if tags else [
                 "Learn English",
-                "American English",
+                "English",
                 "English Fluency",
                 "Slow English",
                 "English Podcast",
