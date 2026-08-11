@@ -53,7 +53,7 @@ jobs:
           fi
 
           if [ -z "$TURNS" ]; then
-            TURNS=130
+            TURNS=360
           fi
 
           python -c "
