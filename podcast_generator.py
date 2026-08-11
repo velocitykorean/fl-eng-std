@@ -57,11 +57,21 @@ TOPICS = [
 
 def load_font(size, bold=True):
     fonts_to_try = [
+        # Windows fonts
         "C:/Windows/Fonts/arialbd.ttf",
+        "C:/Windows/Fonts/arial.ttf",
         "C:/Windows/Fonts/segoeuib.ttf",
         "C:/Windows/Fonts/trebucbd.ttf",
         "C:/Windows/Fonts/impact.ttf",
-        "C:/Windows/Fonts/arial.ttf"
+        # Linux fonts (Ubuntu/GitHub Actions)
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
+        "/usr/share/fonts/truetype/freefont/FreeSans.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+        "/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf",
+        "/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf",
     ]
     for p in fonts_to_try:
         if Path(p).exists():
@@ -126,6 +136,14 @@ REQUIREMENTS:
                         words[idx] = f"**{words[idx]}**"
                         turn["text"] = " ".join(words)
             print(f"Script generated successfully: {len(script)} turns.")
+
+            # Pad script to target length if needed
+            if len(script) < target_turns:
+                fallback = _fallback_script(topic_str, target_turns)
+                needed = target_turns - len(script)
+                script.extend(fallback[:needed])
+                print(f"Padded script to {len(script)} turns.")
+
             return script
         except Exception as e:
             print(f"Script attempt {attempt+1} error: {e}")
@@ -217,23 +235,23 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
     draw = ImageDraw.Draw(canvas)
 
     # 1. Top Left Tab: Continuously Animated Audio Waves + Channel Name
-    font_tab = load_font(26, bold=True)
+    font_tab = load_font(32, bold=True)
     tb_tab = draw.textbbox((0, 0), CHANNEL_NAME, font=font_tab)
     tw_tab = tb_tab[2] - tb_tab[0]
-    tab_right = max(460, 170 + tw_tab + 30)
-    draw.rounded_rectangle([(60, 45), (tab_right, 105)], radius=15, fill=DARK_BAR, outline=YELLOW, width=2)
+    tab_right = max(520, 190 + tw_tab + 30)
+    draw.rounded_rectangle([(60, 40), (tab_right, 110)], radius=18, fill=DARK_BAR, outline=YELLOW, width=3)
     draw_animated_audio_waves(draw, 90, 75, frame_index=current_idx)
-    draw.text((170, 75), CHANNEL_NAME, fill=WHITE, font=font_tab, anchor="lm")
+    draw.text((180, 75), CHANNEL_NAME, fill=WHITE, font=font_tab, anchor="lm")
 
     # 2. Top Right Speaker Pill
     speaker_name = "EMMA" if turn["speaker"] == "Host1" else "ANDREW"
-    font_speaker = load_font(24, bold=True)
-    draw.rounded_rectangle([(1580, 45), (1860, 105)], radius=15, fill=DARK_BAR, outline=YELLOW, width=2)
-    draw_vector_mic(draw, 1615, 75)
-    draw.text((1640, 75), f"HOST: {speaker_name}", fill=YELLOW, font=font_speaker, anchor="lm")
+    font_speaker = load_font(30, bold=True)
+    draw.rounded_rectangle([(1540, 40), (1880, 110)], radius=18, fill=DARK_BAR, outline=YELLOW, width=3)
+    draw_vector_mic(draw, 1580, 75)
+    draw.text((1620, 75), f"HOST: {speaker_name}", fill=YELLOW, font=font_speaker, anchor="lm")
 
-    # 3. HUGE 2-LINE TEXT DISPLAY (100px Font Size)
-    font_main = load_font(100, bold=True)
+    # 3. HUGE 2-LINE TEXT DISPLAY (120px Font Size)
+    font_main = load_font(120, bold=True)
     text = turn["text"]
     
     pattern = r'(\*\*.*?\*\*)'
@@ -246,7 +264,7 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
             for w in p.split(' '):
                 if w: words_list.append((w, False))
 
-    max_w = 1050
+    max_w = 1400
     lines = []
     curr_line = []
     curr_w = 0
@@ -283,7 +301,7 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
 
     center_x = 1300
     center_y = 540
-    line_h = 130
+    line_h = 150
     total_h = len(lines) * line_h
     start_y = center_y - total_h // 2
 
@@ -317,7 +335,7 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
     bar_w = int(VIDEO_WIDTH * progress_ratio)
     draw.line([(0, 1025), (bar_w, 1025)], fill=YELLOW, width=5)
 
-    font_footer = load_font(24, bold=False)
+    font_footer = load_font(30, bold=False)
     draw.text((70, 1052), "Slow & Clear American English Accent", fill=MUTED_WHITE, font=font_footer, anchor="lm")
     
     min_str = f"{int(elapsed_time // 60):02d}:{int(elapsed_time % 60):02d} / {int(total_duration // 60):02d}:{int(total_duration % 60):02d}"
@@ -394,7 +412,8 @@ async def run_full_generator(topic_index=0, custom_turns=130):
         highlight_word=topic_item["keyword"],
         subtitle="SLOW AMERICAN ENGLISH PODCAST",
         ep_num=random.randint(1, 99),
-        output_name=f"thumbnail_{timestamp}.png"
+        output_name=f"thumbnail_{timestamp}.png",
+        output_dir=str(run_dir)
     )
 
     # Generate AI-powered YouTube metadata for upload

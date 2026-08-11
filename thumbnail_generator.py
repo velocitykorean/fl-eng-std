@@ -17,11 +17,21 @@ def load_bold_font(size):
     Loads ultra-bold thumbnail fonts (prioritizing Impact and Arial Black / Bold).
     """
     fonts_to_try = [
+        # Windows fonts
         "C:/Windows/Fonts/impact.ttf",
         "C:/Windows/Fonts/ariblk.ttf",
         "C:/Windows/Fonts/arialbd.ttf",
         "C:/Windows/Fonts/segoeuib.ttf",
-        "C:/Windows/Fonts/trebucbd.ttf"
+        "C:/Windows/Fonts/trebucbd.ttf",
+        # Linux fonts (Ubuntu/GitHub Actions)
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
+        "/usr/share/fonts/truetype/freefont/FreeSans.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+        "/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf",
+        "/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf",
     ]
     for p in fonts_to_try:
         if Path(p).exists():
@@ -31,7 +41,7 @@ def load_bold_font(size):
                 continue
     return ImageFont.load_default()
 
-def create_thumbnail(main_title, highlight_word="", subtitle="", ep_num=1, output_name="thumbnail.png"):
+def create_thumbnail(main_title, highlight_word="", subtitle="", ep_num=1, output_name="thumbnail.png", output_dir=None):
     """
     Creates a clean, bold, high-CTR YouTube thumbnail (1920x1080).
     Focuses strictly on background studio image + massive bold, punchy text.
@@ -54,8 +64,8 @@ def create_thumbnail(main_title, highlight_word="", subtitle="", ep_num=1, outpu
 
     draw = ImageDraw.Draw(canvas)
 
-    # Main Title Rendering (Ultra-bold, size 120px)
-    font_title = load_bold_font(120)
+    # Main Title Rendering (Ultra-bold, size 140px)
+    font_title = load_bold_font(140)
 
     # Format text with yellow highlight
     formatted_title = main_title.strip()
@@ -131,7 +141,10 @@ def create_thumbnail(main_title, highlight_word="", subtitle="", ep_num=1, outpu
             cur_x += wl
 
     # Save
-    out_file = OUTPUT_DIR / output_name
+    if output_dir:
+        out_file = Path(output_dir) / output_name
+    else:
+        out_file = OUTPUT_DIR / output_name
     canvas.convert("RGB").save(out_file, quality=95)
     print(f"Bold thumbnail saved: {out_file}")
     return out_file
