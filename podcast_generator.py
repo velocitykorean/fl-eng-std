@@ -250,8 +250,8 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
     draw_vector_mic(draw, 1580, 75)
     draw.text((1620, 75), f"HOST: {speaker_name}", fill=YELLOW, font=font_speaker, anchor="lm")
 
-    # 3. HUGE 2-LINE TEXT DISPLAY (120px Font Size)
-    font_main = load_font(120, bold=True)
+    # 3. HUGE 2-LINE TEXT DISPLAY - CENTERED on right side, NO cropping
+    font_main = load_font(75, bold=True)
     text = turn["text"]
     
     pattern = r'(\*\*.*?\*\*)'
@@ -264,14 +264,19 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
             for w in p.split(' '):
                 if w: words_list.append((w, False))
 
-    max_w = 1400
+    # Text area: x=780 to x=1820 (safe zone, no cropping)
+    text_area_left = 780
+    text_area_right = 1820
+    max_w = text_area_right - text_area_left  # 1040px
+    text_center_x = (text_area_left + text_area_right) // 2  # 1300
+
     lines = []
     curr_line = []
     curr_w = 0
 
     for word, is_yellow in words_list:
         wb = draw.textbbox((0, 0), word, font=font_main)
-        wl = wb[2] - wb[0] + 24
+        wl = wb[2] - wb[0] + 16
         if curr_w + wl <= max_w or not curr_line:
             curr_line.append((word, is_yellow, wl))
             curr_w += wl
@@ -282,7 +287,7 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
     if curr_line:
         lines.append((curr_line, curr_w))
 
-    # Force max 2 lines
+    # Max 2 lines - if more, split evenly
     if len(lines) > 2:
         mid = len(words_list) // 2
         l1, l2 = words_list[:mid], words_list[mid:]
@@ -291,7 +296,7 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
             res = []
             for w, y in w_list:
                 wb = draw.textbbox((0, 0), w, font=font_main)
-                wl = wb[2] - wb[0] + 24
+                wl = wb[2] - wb[0] + 16
                 res.append((w, y, wl))
                 w_total += wl
             return res, w_total
@@ -299,9 +304,8 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
         line2, w2 = calc_line(l2)
         lines = [(line1, w1), (line2, w2)]
 
-    center_x = 1300
-    center_y = 540
-    line_h = 150
+    center_y = 520
+    line_h = 120
     total_h = len(lines) * line_h
     start_y = center_y - total_h // 2
 
@@ -309,11 +313,12 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
     shadow_layer = Image.new('RGBA', canvas.size, (0, 0, 0, 0))
     sdraw = ImageDraw.Draw(shadow_layer)
     for l_idx, (line_words, line_w) in enumerate(lines):
-        start_x = center_x - line_w // 2
+        start_x = text_center_x - line_w // 2
+        start_x = max(text_area_left, min(start_x, text_area_right - line_w))
         cur_x = start_x
         cur_y = start_y + l_idx * line_h
         for word, is_yellow, wl in line_words:
-            sdraw.text((cur_x + 6, cur_y + 6), word, fill=(0, 0, 0, 240), font=font_main)
+            sdraw.text((cur_x + 4, cur_y + 4), word, fill=(0, 0, 0, 240), font=font_main)
             cur_x += wl
     shadow_layer = shadow_layer.filter(ImageFilter.GaussianBlur(4))
     canvas.paste(shadow_layer, (0, 0), shadow_layer)
@@ -321,7 +326,8 @@ def render_huge_frame(turn, current_idx, total_turns, elapsed_time, total_durati
     # Foreground Huge Text
     draw = ImageDraw.Draw(canvas)
     for l_idx, (line_words, line_w) in enumerate(lines):
-        start_x = center_x - line_w // 2
+        start_x = text_center_x - line_w // 2
+        start_x = max(text_area_left, min(start_x, text_area_right - line_w))
         cur_x = start_x
         cur_y = start_y + l_idx * line_h
         for word, is_yellow, wl in line_words:
