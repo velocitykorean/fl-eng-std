@@ -40,71 +40,86 @@ def create_thumbnail(main_title, highlight_word="", subtitle="", ep_num=1, outpu
 
     gradient = Image.new("RGBA", (1920, 1080), (0, 0, 0, 0))
     gdraw = ImageDraw.Draw(gradient)
-    for x in range(650, 1920):
-        alpha = int(220 * ((x - 650) / 1270) ** 1.2)
+    for x in range(700, 1920):
+        alpha = int(230 * ((x - 700) / 1220) ** 1.2)
         gdraw.line([(x, 0), (x, 1080)], fill=(5, 5, 12, alpha))
     canvas = Image.alpha_composite(canvas, gradient)
 
     draw = ImageDraw.Draw(canvas)
 
-    # Format title into 2-3 beautiful lines
-    font_title = load_bold_font(95)
+    # STRICT text box - ONLY right side, never overlaps woman, never crops right
+    text_area_left = 790      # woman is on the left, never go past this
+    text_area_right = 1870    # safe margin from right edge
+    max_line_w = text_area_right - text_area_left
+    text_area_width = max_line_w
+
     keyword_upper = highlight_word.upper() if highlight_word else ""
     words = main_title.upper().split()
 
-    # Smart line breaking - keep meaningful word groups together
-    lines = []
-    curr = []
-    for w in words:
-        test = curr + [w]
-        wb = draw.textbbox((0, 0), " ".join(test), font=font_title)
-        tw = wb[2] - wb[0]
-        if tw > 950 and len(curr) >= 2:
-            lines.append(curr)
-            curr = [w]
-        else:
-            curr.append(w)
-    if curr:
-        lines.append(curr)
-
-    # Limit to 3 lines max
-    if len(lines) > 3:
-        merged = []
-        for i in range(0, len(lines), 2):
-            if i + 1 < len(lines):
-                merged.append(lines[i] + lines[i + 1])
+    def wrap_words(font):
+        lines = []
+        curr = []
+        for w in words:
+            test = curr + [w]
+            wb = draw.textbbox((0, 0), " ".join(test), font=font)
+            tw = wb[2] - wb[0]
+            if tw > max_line_w and curr:
+                lines.append(curr)
+                curr = [w]
             else:
-                merged.append(lines[i])
-        lines = merged[:3]
+                curr.append(w)
+        if curr:
+            lines.append(curr)
+        return lines
 
-    # Draw centered on right side
-    center_x = 1350
-    line_h = 130
+    # Auto-fit: shrink font until text fits in <=3 lines, each line fits width
+    font_size = 110
+    lines = None
+    while font_size >= 40:
+        font = load_bold_font(font_size)
+        lines = wrap_words(font)
+        ok = len(lines) <= 3 and all(
+            (draw.textbbox((0, 0), " ".join(l), font=font)[2]) <= max_line_w for l in lines
+        )
+        if ok:
+            break
+        font_size -= 5
+
+    if lines is None:
+        font = load_bold_font(45)
+        lines = wrap_words(font)
+
+    line_h = int(font_size * 1.3)
     total_h = len(lines) * line_h
-    start_y = 540 - total_h // 2
+    start_y = 500 - total_h // 2
 
-    for line_words in lines:
+    # Draw each line - CENTERED within the right-side text box
+    text_center_x = (text_area_left + text_area_right) // 2
+
+    for idx, line_words in enumerate(lines):
         line_str = " ".join(line_words)
-        has_keyword = any(w.upper() == keyword_upper for w in line_words)
+        has_keyword = any(w == keyword_upper for w in line_words)
 
-        wb = draw.textbbox((0, 0), line_str, font=font_title)
+        wb = draw.textbbox((0, 0), line_str, font=font)
         lw = wb[2] - wb[0]
-        lx = center_x - lw // 2
-        ly = start_y + lines.index(line_words) * line_h
+        # Center within the box, then clamp so it never crosses the box bounds
+        lx = text_center_x - lw // 2
+        lx = max(text_area_left, min(lx, text_area_right - lw))
+        ly = start_y + idx * line_h
 
         # Shadow
         shadow = Image.new('RGBA', canvas.size, (0, 0, 0, 0))
         sdraw = ImageDraw.Draw(shadow)
         for dx, dy in [(-4, -4), (4, -4), (-4, 4), (4, 4), (0, 8), (8, 0)]:
-            sdraw.text((lx + dx, ly + dy), line_str, fill=(0, 0, 0, 255), font=font_title)
+            sdraw.text((lx + dx, ly + dy), line_str, fill=(0, 0, 0, 255), font=font)
         shadow = shadow.filter(ImageFilter.GaussianBlur(6))
         canvas.paste(shadow, (0, 0), shadow)
 
         draw = ImageDraw.Draw(canvas)
         color = YELLOW if has_keyword else WHITE
-        draw.text((lx, ly), line_str, fill=color, font=font_title, stroke_width=5, stroke_fill=BLACK)
+        draw.text((lx, ly), line_str, fill=color, font=font, stroke_width=5, stroke_fill=BLACK)
 
-    # EP pill
+    # EP pill bottom right
     font_pill = load_bold_font(36)
     pill_text = f"EP {ep_num}"
     pb = draw.textbbox((0, 0), pill_text, font=font_pill)
