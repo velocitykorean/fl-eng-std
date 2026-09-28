@@ -94,6 +94,25 @@ jobs:
           YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
           GITHUB_ACTIONS: "true"
 
+      - name: Upload to Facebook
+        id: facebook-upload
+        continue-on-error: true
+        run: |
+          LATEST_DIR="${{ steps.generate.outputs.LATEST_PODCAST_DIR }}"
+
+          if [ ! -f "${LATEST_DIR}podcast_30min_final.mp4" ]; then
+            echo "Video file not found"
+            exit 1
+          fi
+
+          python publish_facebook.py "${LATEST_DIR}podcast_30min_final.mp4" "${LATEST_DIR}youtube_metadata.json"
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+          FACEBOOK_PAGE_ACCESS_TOKEN: ${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}
+          GITHUB_ACTIONS: "true"
+
       - name: Upload Video Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -102,4 +121,5 @@ jobs:
             ${{ steps.generate.outputs.LATEST_PODCAST_DIR }}podcast_30min_final.mp4
             ${{ steps.generate.outputs.LATEST_PODCAST_DIR }}thumbnail_*.png
             ${{ steps.generate.outputs.LATEST_PODCAST_DIR }}youtube_metadata.json
+            ${{ steps.generate.outputs.LATEST_PODCAST_DIR }}facebook_upload_result.json
           retention-days: 7
