@@ -15,6 +15,23 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from dotenv import load_dotenv
 import edge_tts
 
+def configure_edge_tts():
+    """Ensure edge_tts connects to Microsoft's active endpoint to avoid 403 on cloud runners."""
+    try:
+        import edge_tts.constants
+        import edge_tts.communicate
+        token = getattr(edge_tts.constants, "TRUSTED_CLIENT_TOKEN", "6A5AA1D4EAFF4E9FB37E23D68491D6F4")
+        new_url = (
+            "wss://api.msedgeservices.com/tts/cognitiveservices/websocket/v1"
+            f"?Ocp-Apim-Subscription-Key={token}"
+        )
+        edge_tts.constants.WSS_URL = new_url
+        edge_tts.communicate.WSS_URL = new_url
+    except Exception:
+        pass
+
+configure_edge_tts()
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).parent
@@ -180,6 +197,7 @@ async def generate_audio_edge(turns, run_dir):
         generated = False
         for attempt in range(3):
             try:
+                configure_edge_tts()
                 communicate = edge_tts.Communicate(spoken_text, target_voice, rate=VOICE_RATE)
                 await communicate.save(str(mp3_path))
                 if mp3_path.exists() and mp3_path.stat().st_size > 0:
@@ -188,6 +206,17 @@ async def generate_audio_edge(turns, run_dir):
             except Exception as e:
                 print(f"  Edge TTS turn {i} attempt {attempt+1} error: {e}")
                 await asyncio.sleep(1)
+
+        if not generated:
+            try:
+                from gtts import gTTS
+                tts = gTTS(text=spoken_text, lang="en")
+                tts.save(str(mp3_path))
+                if mp3_path.exists() and mp3_path.stat().st_size > 0:
+                    generated = True
+                    print(f"  ✓ Fallback gTTS succeeded for turn {i}")
+            except Exception:
+                pass
 
         if not generated:
             print(f"  Warning: Falling back to silent audio for turn {i}")
