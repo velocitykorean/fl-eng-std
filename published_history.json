@@ -18,5 +18,15 @@
     "duration_sec": 219.69599999999994,
     "turns_count": 26,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261014_055122"
+  },
+  {
+    "episode": 3,
+    "date": "2026-10-14T08:51:20.140484",
+    "topic": "The Power of Daily English Listening Habits",
+    "keyword": "HABITS",
+    "title": "Slow English Podcast - The Power of Daily English Listening Habits | Episode 3",
+    "duration_sec": 1518.6479999999995,
+    "turns_count": 168,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261014_083034"
   }
 ]
