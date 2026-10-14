@@ -65,20 +65,6 @@ EMMA_VOICE = "en-US-AvaNeural"
 ANDREW_VOICE = "en-US-AndrewNeural"
 VOICE_RATE = "-15%"
 
-# Topics List
-TOPICS = [
-    {"topic": "How to Think Directly in English Without Translating", "keyword": "THINK", "sub": "STOP TRANSLATING IN YOUR HEAD"},
-    {"topic": "Building Confidence to Speak English Everyday", "keyword": "CONFIDENCE", "sub": "SPEAK WITHOUT FEAR"},
-    {"topic": "The Power of Daily English Listening Habits", "keyword": "HABITS", "sub": "IMPROVE YOUR LISTENING FAST"},
-    {"topic": "Overcoming the Fear of Making Mistakes in English", "keyword": "MISTAKES", "sub": "LEARN FROM EVERY MISTAKE"},
-    {"topic": "How to Learn English Vocabulary Naturally", "keyword": "VOCABULARY", "sub": "REMEMBER WORDS EASILY"},
-    {"topic": "Small Talk and Everyday English Conversations", "keyword": "CONVERSATIONS", "sub": "SPEAK NATURALLY IN ANY SITUATION"},
-    {"topic": "Mastering American Accent Pronunciation and Rhythm", "keyword": "PRONUNCIATION", "sub": "SOUND MORE NATURAL"},
-    {"topic": "Traveling in the USA and Exploring American Culture", "keyword": "TRAVELING", "sub": "ENGLISH FOR TRAVEL"},
-    {"topic": "Work, Business, and Professional English Basics", "keyword": "CAREER", "sub": "BOOST YOUR PROFESSIONAL ENGLISH"},
-    {"topic": "The Secret to Fluency: Consistency Over Perfection", "keyword": "FLUENCY", "sub": "THE PATH TO REAL FLUENCY"}
-]
-
 def load_font(size, bold=True):
     fonts_to_try = [
         # Windows fonts
@@ -185,7 +171,20 @@ OUTPUT ONLY valid JSON matching this schema:
             import time
             time.sleep(2)
 
-    return TOPICS[random.randint(0, len(TOPICS) - 1)]
+    # Procedural fallback only if network completely times out
+    ep_num = len(past_topics) + 1
+    return {
+        "topic": f"Mastering English Speaking and Natural Fluency (Vol. {ep_num})",
+        "keyword": "FLUENCY",
+        "sub": "SPEAK ENGLISH NATURALLY",
+        "acts": [
+            f"Act 1: Core concepts and speaking mindset",
+            "Act 2: Everyday real-world roleplay dialogues",
+            "Act 3: Key vocabulary and natural expressions",
+            "Act 4: Overcoming common speaking mistakes",
+            "Act 5: The 5-day fluency action challenge"
+        ]
+    }
 
 def get_next_topic(history: list, custom_topic: str = None, topic_index = None) -> dict:
     if custom_topic:
@@ -204,35 +203,9 @@ def get_next_topic(history: list, custom_topic: str = None, topic_index = None) 
             ]
         }
 
-    if topic_index is not None and isinstance(topic_index, int) and 0 <= topic_index < len(TOPICS):
-        t = TOPICS[topic_index].copy()
-        if "acts" not in t:
-            t["acts"] = [
-                f"Act 1: Introduction to {t['topic']}",
-                "Act 2: Everyday real-world roleplay",
-                "Act 3: Key vocabulary and natural expressions",
-                "Act 4: Overcoming common speaking mistakes",
-                "Act 5: The 5-day fluency action plan"
-            ]
-        return t
-
     past_topics = [h.get("topic", "").lower().strip() for h in history if isinstance(h, dict) and "topic" in h]
 
-    for cat in TOPICS:
-        cat_t = cat["topic"].lower().strip()
-        if not any(cat_t in pt or pt in cat_t for pt in past_topics):
-            t = cat.copy()
-            t["acts"] = [
-                f"Act 1: Introduction to {t['topic']}",
-                "Act 2: Everyday real-world roleplay",
-                "Act 3: Key vocabulary and natural expressions",
-                "Act 4: Overcoming common speaking mistakes",
-                "Act 5: The 5-day fluency action plan"
-            ]
-            print(f"[TopicGenerator] Selected unused catalog topic: '{t['topic']}'")
-            return t
-
-    print("[TopicGenerator] All catalog topics used. Generating fresh topic with AI...")
+    print("[TopicGenerator] Generating fresh, unique dynamic topic with Pollinations AI...")
     return generate_dynamic_topic(past_topics)
 
 def generate_act_turns(topic_str: str, act_title: str, turns_count: int) -> list:
