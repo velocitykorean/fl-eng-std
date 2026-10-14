@@ -8,5 +8,15 @@
     "duration_sec": 141.576,
     "turns_count": 17,
     "run_dir": "D:\\E agy cli\\E youtube bots\\fl-eng-std\\output\\run_20261014_111727"
+  },
+  {
+    "episode": 2,
+    "date": "2026-10-14T05:55:14.717435",
+    "topic": "Building Confidence to Speak English Everyday",
+    "keyword": "CONFIDENCE",
+    "title": "Speak English with CONFIDENCE: Master Everyday Conversations (English Fluency Studio)",
+    "duration_sec": 219.69599999999994,
+    "turns_count": 26,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261014_055122"
   }
 ]
