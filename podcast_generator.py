@@ -15,6 +15,13 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from dotenv import load_dotenv
 import edge_tts
 
+# Ensure UTF-8 stdout encoding on Windows
+if sys.platform == 'win32':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
+
 def configure_edge_tts():
     """Ensure edge_tts connects to Microsoft's active endpoint to avoid 403 on cloud runners."""
     try:
@@ -101,80 +108,229 @@ def clean_text(text):
     text = re.sub(r'\s+', ' ', text).strip()
     return text
 
-def generate_script(topic_item, target_turns=210):
-    topic_str = topic_item["topic"]
-    print(f"Generating full 30-minute English podcast script for: '{topic_str}' ({target_turns} turns)...")
+HISTORY_FILE = BASE_DIR / "published_history.json"
 
-    prompt = f"""Write {target_turns} turns of a realistic English learning podcast between Emma and Andrew discussing: {topic_str}
+def load_published_history() -> list:
+    if HISTORY_FILE.exists():
+        try:
+            with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
 
-RULES:
-- Each turn MUST be 2-4 sentences, 16-30 words
-- Hosts react to and build on each other's points naturally
-- Natural flow: questions, agreements, examples, short personal stories
-- Wrap exactly 1 key word per turn in **asterisks**
-- Use clear, standard English learners can follow
+def save_published_history(history: list):
+    try:
+        with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(history, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        print(f"Warning: Failed to save published history: {e}")
 
-Return as clean JSON array only, no other text:
-[{{"speaker":"Host1","text":"..."}},{{"speaker":"Host2","text":"..."}}]
+def generate_dynamic_topic(past_topics: list) -> dict:
+    """Uses Pollinations AI (gemini-fast) to invent a brand-new viral English learning topic and 5 acts."""
+    api_key = os.getenv("POLLINATIONS_API_KEY")
+    headers = {"Content-Type": "application/json"}
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
 
-Example:
-[{{"speaker":"Host1","text":"Welcome back everyone! Today we are exploring why thinking directly in English is the **secret** to real fluency."}},
- {{"speaker":"Host2","text":"That is such a great topic. Many learners translate in their heads first, and honestly it slows them down **so** much."}}]"""
+    prompt = f"""You are the creative director for 'English Fluency Studio', a premier slow English podcast channel.
+Previously published topics (DO NOT REPEAT OR DUPLICATE):
+{json.dumps(past_topics[-20:], indent=2)}
 
-    POLLINATIONS_API_KEY = os.getenv("POLLINATIONS_API_KEY")
-    headers = {"Authorization": f"Bearer {POLLINATIONS_API_KEY}"}
+Generate ONE brand-new, high-converting slow English learning topic for adult ESL learners.
+OUTPUT ONLY valid JSON matching this schema:
+{{
+  "topic": "Catchy Full Topic Title (e.g. How to Speak English at Work with Confidence)",
+  "keyword": "WORKPLACE",
+  "sub": "BOOST YOUR PROFESSIONAL FLUENCY",
+  "acts": [
+    "Act 1: Morning greetings and water-cooler small talk",
+    "Act 2: Expressing opinions politely in meetings",
+    "Act 3: Handling disagreements and asking for clarification",
+    "Act 4: Writing crisp emails and follow-up etiquette",
+    "Act 5: The 5-day professional speaking challenge"
+  ]
+}}"""
+
     for attempt in range(3):
         try:
-            resp = requests.post("https://gen.pollinations.ai/v1/chat/completions", json={
-                "model": "gemini-fast",
-                "messages": [
-                    {"role": "system", "content": "You write realistic, natural English learning podcast dialogue. Turns are 2-3 sentences (20-35 words) with hosts reacting to each other. Wrap 1 key word per turn in **keyword**."},
-                    {"role": "user", "content": prompt}
-                ],
-                "temperature": 0.85
-            }, headers=headers, timeout=180)
-            resp.raise_for_status()
-            content = resp.json()["choices"][0]["message"]["content"].strip()
-            
-            if "```json" in content:
-                content = content.split("```json")[1].split("```")[0].strip()
-            elif "```" in content:
-                content = content.split("```")[1].split("```")[0].strip()
-            
-            script = json.loads(content)
-            for i, turn in enumerate(script):
-                turn["speaker"] = "Host1" if i % 2 == 0 else "Host2"
-                turn["text"] = clean_text(turn["text"])
-                if "**" not in turn["text"]:
-                    words = turn["text"].split()
-                    if len(words) > 1:
-                        idx = len(words) // 2
-                        words[idx] = f"**{words[idx]}**"
-                        turn["text"] = " ".join(words)
-            print(f"Script generated successfully: {len(script)} turns.")
-
-            # Pad script to target length if needed
-            if len(script) < target_turns:
-                fallback = _fallback_script(topic_str, target_turns)
-                needed = target_turns - len(script)
-                script.extend(fallback[:needed])
-                print(f"Padded script to {len(script)} turns.")
-
-            return script
+            print(f"[TopicGenerator] Generating fresh dynamic topic via AI (attempt {attempt+1}/3)...")
+            resp = requests.post(
+                "https://gen.pollinations.ai/v1/chat/completions",
+                json={
+                    "model": "gemini-fast",
+                    "messages": [
+                        {"role": "system", "content": "You are a JSON-only API. Return raw JSON."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    "temperature": 0.85
+                },
+                headers=headers,
+                timeout=30
+            )
+            raw = resp.json()["choices"][0]["message"]["content"].strip()
+            if raw.startswith("```"):
+                lines = raw.split("\n")
+                if lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines and lines[-1].startswith("```"):
+                    lines = lines[:-1]
+                raw = "\n".join(lines).strip()
+            data = json.loads(raw)
+            if "topic" in data and "acts" in data and len(data["acts"]) >= 3:
+                print(f"[TopicGenerator] Dynamically generated new topic: '{data['topic']}'")
+                return data
         except Exception as e:
-            print(f"Script attempt {attempt+1} error: {e}")
-    
-    return _fallback_script(topic_str, target_turns)
+            print(f"[TopicGenerator] Error generating topic (attempt {attempt+1}): {e}")
+            import time
+            time.sleep(2)
 
-def _fallback_script(topic_str, target_turns=130):
-    script = []
-    for i in range(target_turns):
-        s = "Host1" if i % 2 == 0 else "Host2"
-        if s == "Host1":
-            script.append({"speaker": "Host1", "text": f"Welcome back to the podcast! Today we're going to explore **{topic_str}** in a way that's easy to understand."})
-        else:
-            script.append({"speaker": "Host2", "text": f"That's a great topic to cover. Let's break it down step by step and give our listeners some **practical** tips they can use today."})
-    return script
+    return TOPICS[random.randint(0, len(TOPICS) - 1)]
+
+def get_next_topic(history: list, custom_topic: str = None, topic_index = None) -> dict:
+    if custom_topic:
+        words = custom_topic.split()
+        kw = words[0].upper() if words else "ENGLISH"
+        return {
+            "topic": custom_topic,
+            "keyword": kw[:12],
+            "sub": "MASTER EVERYDAY ENGLISH",
+            "acts": [
+                f"Act 1: Foundations of {custom_topic}",
+                "Act 2: Real-world practical scenarios",
+                "Act 3: Common expressions and vocabulary",
+                "Act 4: Native rhythm and pronunciation",
+                "Act 5: Actionable speaking practice drill"
+            ]
+        }
+
+    if topic_index is not None and isinstance(topic_index, int) and 0 <= topic_index < len(TOPICS):
+        t = TOPICS[topic_index].copy()
+        if "acts" not in t:
+            t["acts"] = [
+                f"Act 1: Introduction to {t['topic']}",
+                "Act 2: Everyday real-world roleplay",
+                "Act 3: Key vocabulary and natural expressions",
+                "Act 4: Overcoming common speaking mistakes",
+                "Act 5: The 5-day fluency action plan"
+            ]
+        return t
+
+    past_topics = [h.get("topic", "").lower().strip() for h in history if isinstance(h, dict) and "topic" in h]
+
+    for cat in TOPICS:
+        cat_t = cat["topic"].lower().strip()
+        if not any(cat_t in pt or pt in cat_t for pt in past_topics):
+            t = cat.copy()
+            t["acts"] = [
+                f"Act 1: Introduction to {t['topic']}",
+                "Act 2: Everyday real-world roleplay",
+                "Act 3: Key vocabulary and natural expressions",
+                "Act 4: Overcoming common speaking mistakes",
+                "Act 5: The 5-day fluency action plan"
+            ]
+            print(f"[TopicGenerator] Selected unused catalog topic: '{t['topic']}'")
+            return t
+
+    print("[TopicGenerator] All catalog topics used. Generating fresh topic with AI...")
+    return generate_dynamic_topic(past_topics)
+
+def generate_act_turns(topic_str: str, act_title: str, turns_count: int) -> list:
+    api_key = os.getenv("POLLINATIONS_API_KEY")
+    headers = {"Content-Type": "application/json"}
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
+
+    prompt = f"""Write {turns_count} turns of a realistic slow English learning podcast between Emma (Host1) and Andrew (Host2).
+OVERALL TOPIC: {topic_str}
+CHAPTER FOCUS: {act_title}
+
+RULES:
+- Exactly {turns_count} turns alternating Host1 -> Host2 -> Host1...
+- Each turn MUST be 2-3 sentences, 16-30 words.
+- Natural flow: questions, reactions, practical examples, friendly banter.
+- Wrap exactly 1 key vocabulary word per turn in **asterisks** (e.g. "We must **practice** every day.").
+- Clear standard slow English suitable for learners.
+
+Return ONLY clean JSON array:
+[{{"speaker":"Host1","text":"..."}},{{"speaker":"Host2","text":"..."}}]"""
+
+    for attempt in range(3):
+        try:
+            resp = requests.post(
+                "https://gen.pollinations.ai/v1/chat/completions",
+                json={
+                    "model": "gemini-fast",
+                    "messages": [
+                        {"role": "system", "content": "You are a professional ESL podcast scriptwriter. Return ONLY valid JSON array."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    "temperature": 0.8
+                },
+                headers=headers,
+                timeout=45
+            )
+            raw = resp.json()["choices"][0]["message"]["content"].strip()
+            if raw.startswith("```"):
+                lines = raw.split("\n")
+                if lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines and lines[-1].startswith("```"):
+                    lines = lines[:-1]
+                raw = "\n".join(lines).strip()
+            data = json.loads(raw)
+            if isinstance(data, list) and len(data) >= 4:
+                for i, turn in enumerate(data):
+                    turn["speaker"] = "Host1" if i % 2 == 0 else "Host2"
+                    turn["text"] = clean_text(turn["text"])
+                    if "**" not in turn["text"]:
+                        words = turn["text"].split()
+                        if len(words) > 1:
+                            idx = len(words) // 2
+                            words[idx] = f"**{words[idx]}**"
+                            turn["text"] = " ".join(words)
+                return data
+        except Exception as e:
+            print(f"  Act AI generation attempt {attempt+1} error: {e}")
+            import time
+            time.sleep(2)
+    return []
+
+def generate_script(topic_item, target_turns=170):
+    topic_str = topic_item["topic"]
+    acts = topic_item.get("acts", [
+        f"Act 1: Foundations of {topic_str}",
+        "Act 2: Real-world scenarios & dialogues",
+        "Act 3: Key vocabulary and natural phrases",
+        "Act 4: Overcoming common obstacles & mistakes",
+        "Act 5: The 5-day speaking challenge"
+    ])
+    num_acts = len(acts)
+    turns_per_act = max(1, target_turns // num_acts)
+    remainder = target_turns - (turns_per_act * num_acts)
+
+    print(f"Generating full English podcast script for: '{topic_str}' across {num_acts} acts ({target_turns} turns total)...")
+
+    full_script = []
+    for idx, act_title in enumerate(acts):
+        needed = turns_per_act + (remainder if idx == num_acts - 1 else 0)
+        print(f"  Generating {act_title} ({needed} turns)...")
+        act_turns = generate_act_turns(topic_str, act_title, turns_count=needed)
+        if not act_turns:
+            act_turns = [
+                {"speaker": "Host1" if i % 2 == 0 else "Host2",
+                 "text": f"In this chapter on {act_title}, remember to **practice** speaking out loud every single day." if i % 2 == 0
+                 else f"That's completely true, Emma. Active listening and speaking build real conversational **fluency** step by step."}
+                for i in range(needed)
+            ]
+        full_script.extend(act_turns)
+        print(f"  Progress: {len(full_script)}/{target_turns} turns ready.")
+
+    for i, turn in enumerate(full_script):
+        turn["speaker"] = "Host1" if i % 2 == 0 else "Host2"
+
+    print(f"Script generation complete: {len(full_script)} turns.")
+    return full_script
 
 async def generate_audio_edge(turns, run_dir):
     """
@@ -426,15 +582,18 @@ def assemble_video(turns, audio_files, run_dir):
 
     return final_video, total_duration
 
-async def run_full_generator(topic_index=0, custom_turns=170):
-    topic_item = TOPICS[topic_index % len(TOPICS)]
+async def run_full_generator(topic_index=None, custom_turns=170, custom_topic=None):
+    history = load_published_history()
+    ep_num = len(history) + 1
+
+    topic_item = get_next_topic(history, custom_topic=custom_topic, topic_index=topic_index)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_dir = OUTPUT_DIR / f"run_{timestamp}"
     run_dir.mkdir(parents=True, exist_ok=True)
 
     print("=" * 70)
     print("  SLOW ENGLISH PODCAST GENERATOR (Edge TTS Neural)")
-    print(f"  Topic: {topic_item['topic']}")
+    print(f"  Episode #{ep_num}: {topic_item['topic']}")
     print(f"  Target Turns: {custom_turns} (~30 Minutes)")
     print("=" * 70)
 
@@ -449,14 +608,13 @@ async def run_full_generator(topic_index=0, custom_turns=170):
     thumb_path = create_thumbnail(
         main_title=topic_item["topic"].upper(),
         highlight_word=topic_item["keyword"],
-        subtitle="SLOW ENGLISH PODCAST",
-        ep_num=random.randint(1, 99),
+        subtitle=topic_item.get("sub", "SLOW ENGLISH PODCAST"),
+        ep_num=ep_num,
         output_name=f"thumbnail_{timestamp}.png",
         output_dir=str(run_dir)
     )
 
     # Generate AI-powered YouTube metadata for upload
-    ep_num = random.randint(1, 999)
     topic_name = topic_item["topic"]
     keyword = topic_item["keyword"]
 
@@ -467,6 +625,20 @@ async def run_full_generator(topic_index=0, custom_turns=170):
     with open(metadata_path, "w", encoding="utf-8") as f:
         json.dump(metadata, f, indent=2, ensure_ascii=False)
     print(f"  📄 YouTube metadata saved: {metadata_path.name}")
+
+    # Append to published history
+    history_record = {
+        "episode": ep_num,
+        "date": datetime.now().isoformat(),
+        "topic": topic_name,
+        "keyword": keyword,
+        "title": metadata.get("selected_title", topic_name),
+        "duration_sec": duration,
+        "turns_count": len(turns),
+        "run_dir": str(run_dir)
+    }
+    history.append(history_record)
+    save_published_history(history)
 
     print("=" * 70)
     print("  FULL BROADCAST GENERATION COMPLETE!")
@@ -573,11 +745,11 @@ Return ONLY valid JSON, no markdown."""
             ai_metadata["duration_minutes"] = duration / 60
             ai_metadata["turns_count"] = len(turns)
 
-            print(f"  ✅ AI metadata generated successfully")
+            print(f"  [OK] AI metadata generated successfully")
             return ai_metadata
 
         except Exception as e:
-            print(f"  ⚠️ AI metadata attempt {attempt+1} failed: {e}")
+            print(f"  [WARN] AI metadata attempt {attempt+1} failed: {e}")
 
     # Fallback to basic metadata
     return _fallback_metadata(topic_name, keyword, ep_num, duration, turns)

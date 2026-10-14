@@ -24,6 +24,9 @@ on:
         required: false
         default: '170'
 
+permissions:
+  contents: write
+
 jobs:
   generate-podcast:
     runs-on: ubuntu-latest
@@ -63,21 +66,16 @@ jobs:
         run: |
           echo "Starting podcast generation..."
 
-          TOPIC_INDEX="${{ github.event.inputs.topic }}"
-          TURNS="${{ github.event.inputs.turns }}"
-
-          if [ -z "$TOPIC_INDEX" ]; then
-            TOPIC_INDEX=$(python -c "import random; print(random.randint(0, 9))")
+          TOPIC_ARG=""
+          if [ -n "${{ github.event.inputs.topic }}" ]; then
+            TOPIC_ARG="topic_index=${{ github.event.inputs.topic }},"
           fi
-
-          if [ -z "$TURNS" ]; then
-            TURNS=170
-          fi
+          TURNS="${{ github.event.inputs.turns || '170' }}"
 
           python -c "
           import asyncio
           from podcast_generator import run_full_generator
-          asyncio.run(run_full_generator(topic_index=$TOPIC_INDEX, custom_turns=$TURNS))
+          asyncio.run(run_full_generator(${TOPIC_ARG} custom_turns=${TURNS}))
           "
 
           LATEST_DIR=$(ls -td output/run_*/ | head -1)
@@ -167,3 +165,17 @@ jobs:
             ${{ steps.generate.outputs.LATEST_PODCAST_DIR }}youtube_metadata.json
             ${{ steps.generate.outputs.LATEST_PODCAST_DIR }}facebook_upload_result.json
           retention-days: 7
+
+      - name: Commit published history log
+        if: always()
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add published_history.json
+          if git diff --staged --quiet; then
+            echo "No changes to published_history.json to commit."
+          else
+            git commit -m "chore: update published history log [skip ci]"
+            git pull --rebase origin main || true
+            git push origin main
+          fi
