@@ -27,10 +27,6 @@ EDGE_ENDPOINTS = [
     "wss://api.msedgeservices.com/tts/cognitiveservices/websocket/v1?Ocp-Apim-Subscription-Key=6A5AA1D4EAFF4E9FB37E23D68491D6F4"
 ]
 
-VOICE_FALLBACKS = {
-    "en-US-AvaNeural": ["en-US-EmmaNeural", "en-US-JennyNeural"],
-    "en-US-AndrewNeural": ["en-US-BrianNeural", "en-US-GuyNeural"]
-}
 
 def set_edge_tts_endpoint(url: str):
     """Dynamically set the active Microsoft Edge TTS endpoint."""
@@ -328,14 +324,12 @@ async def generate_audio_edge(turns, run_dir):
         target_voice = EMMA_VOICE if turn["speaker"] == "Host1" else ANDREW_VOICE
         voice_label = "Emma (en-US-AvaNeural)" if turn["speaker"] == "Host1" else "Andrew (en-US-AndrewNeural)"
         
-        candidate_voices = [target_voice] + VOICE_FALLBACKS.get(target_voice, [])
         generated = False
-        for attempt in range(6):
+        for attempt in range(5):
             target_endpoint = EDGE_ENDPOINTS[attempt % len(EDGE_ENDPOINTS)]
-            curr_voice = candidate_voices[(attempt // 2) % len(candidate_voices)]
             set_edge_tts_endpoint(target_endpoint)
             try:
-                communicate = edge_tts.Communicate(spoken_text, curr_voice, rate=VOICE_RATE)
+                communicate = edge_tts.Communicate(spoken_text, target_voice, rate=VOICE_RATE)
                 await communicate.save(str(mp3_path))
                 if mp3_path.exists() and mp3_path.stat().st_size > 0:
                     generated = True
@@ -345,10 +339,10 @@ async def generate_audio_edge(turns, run_dir):
                 endpoint_name = "Bing" if "bing" in target_endpoint else "MSEdge"
                 if "429" in err_str or "rate" in err_str or "invalid response status" in err_str:
                     backoff = (2 ** (attempt % 3)) * 1.5 + random.uniform(1.0, 2.5)
-                    print(f"  [Edge TTS Throttled] Turn {i} on {endpoint_name} (Voice: {curr_voice}). Backing off {backoff:.1f}s and switching endpoint...")
+                    print(f"  [Edge TTS Throttled] Turn {i} on {endpoint_name} (Voice: {target_voice}). Backing off {backoff:.1f}s and switching endpoint...")
                     await asyncio.sleep(backoff)
                 else:
-                    print(f"  [Edge TTS Retry] Turn {i} attempt {attempt+1}/6 error ({e}). Switching endpoint...")
+                    print(f"  [Edge TTS Retry] Turn {i} attempt {attempt+1}/5 error ({e}). Switching endpoint...")
                     await asyncio.sleep(1.0)
 
         if not generated:
