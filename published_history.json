@@ -28,5 +28,15 @@
     "duration_sec": 1518.6479999999995,
     "turns_count": 168,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261014_083034"
+  },
+  {
+    "episode": 4,
+    "date": "2026-10-15T08:31:59.581128",
+    "topic": "Mastering English for Social Gatherings: Small Talk & Storytelling",
+    "keyword": "SOCIAL",
+    "title": "Unlock Social English: Master Small Talk & Storytelling for Gatherings | Episode 4",
+    "duration_sec": 1553.8319999999999,
+    "turns_count": 169,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261015_080536"
   }
 ]
