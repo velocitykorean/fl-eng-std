@@ -38,5 +38,15 @@
     "duration_sec": 1553.8319999999999,
     "turns_count": 169,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261015_080536"
+  },
+  {
+    "episode": 5,
+    "date": "2026-10-16T08:26:11.259420",
+    "topic": "Navigate Your Career: Essential English for Workplace Success",
+    "keyword": "CAREER",
+    "title": "Master Workplace English: Your CAREER Starts Here! (Episode 5 | English Fluency Studio)",
+    "duration_sec": 1473.9599999999998,
+    "turns_count": 174,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261016_075906"
   }
 ]
