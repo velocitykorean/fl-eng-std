@@ -48,5 +48,15 @@
     "duration_sec": 1473.9599999999998,
     "turns_count": 174,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261016_075906"
+  },
+  {
+    "episode": 6,
+    "date": "2026-10-17T07:59:08.727403",
+    "topic": "Unlock Your Global Voice: Mastering English for International Travel",
+    "keyword": "TRAVEL",
+    "title": "Fluent English for Travel: Airport Check-in & Security (Ep. 6)",
+    "duration_sec": 1219.0559999999991,
+    "turns_count": 165,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261017_073700"
   }
 ]
