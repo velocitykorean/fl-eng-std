@@ -58,5 +58,15 @@
     "duration_sec": 1219.0559999999991,
     "turns_count": 165,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261017_073700"
+  },
+  {
+    "episode": 7,
+    "date": "2026-10-18T08:12:17.396525",
+    "topic": "From Hesitant to Heard: Confidently Expressing Yourself in English Conversations",
+    "keyword": "CONFIDENCE",
+    "title": "Speak English with CONFIDENCE: Overcome Your Speaking Fears (English Fluency Studio)",
+    "duration_sec": 1187.4959999999999,
+    "turns_count": 169,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261018_075242"
   }
 ]
