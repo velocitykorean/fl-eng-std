@@ -68,5 +68,15 @@
     "duration_sec": 1187.4959999999999,
     "turns_count": 169,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261018_075242"
+  },
+  {
+    "episode": 8,
+    "date": "2026-10-19T09:00:40.933026",
+    "topic": "Beyond Basics: Mastering English for Deeper Conversations and Friendships",
+    "keyword": "RELATIONSHIPS",
+    "title": "Unlock Deeper English Conversations: Master Relationships & Friendships (Ep. 8)",
+    "duration_sec": 1215.4320000000002,
+    "turns_count": 168,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261019_083705"
   }
 ]
