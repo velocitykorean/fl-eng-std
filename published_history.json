@@ -78,5 +78,15 @@
     "duration_sec": 1215.4320000000002,
     "turns_count": 168,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261019_083705"
+  },
+  {
+    "episode": 9,
+    "date": "2026-10-20T00:14:37.477920",
+    "topic": "Mastering English for Business Presentations: From First Draft to Standing Ovation",
+    "keyword": "PRESENTATIONS",
+    "title": "Slow English Podcast - Mastering English for Business Presentations: From First Draft to Standing Ovation | Episode 9",
+    "duration_sec": 1457.2799999999995,
+    "turns_count": 168,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261019_234054"
   }
 ]
