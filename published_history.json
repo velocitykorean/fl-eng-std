@@ -88,5 +88,15 @@
     "duration_sec": 1457.2799999999995,
     "turns_count": 168,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261019_234054"
+  },
+  {
+    "episode": 10,
+    "date": "2026-10-20T08:43:17.260574",
+    "topic": "Mastering English for Public Speaking: From Nerves to Applause",
+    "keyword": "PUBLIC SPEAKING",
+    "title": "Master Public Speaking in English: From Nerves to Applause! (English Fluency Studio)",
+    "duration_sec": 1224.6239999999996,
+    "turns_count": 168,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261020_081804"
   }
 ]
