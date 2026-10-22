@@ -2,7 +2,7 @@ name: English Fluency Studio - Daily Podcast Generator
 
 on:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '42 2 * * *'
 
   workflow_dispatch:
     inputs:
