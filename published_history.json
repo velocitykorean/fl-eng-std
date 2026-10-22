@@ -108,5 +108,15 @@
     "duration_sec": 1455.096000000001,
     "turns_count": 170,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261021_082233"
+  },
+  {
+    "episode": 12,
+    "date": "2026-10-22T08:52:54.122584",
+    "topic": "Mastering Difficult Conversations: English for Conflict Resolution and Feedback",
+    "keyword": "CONFLICT",
+    "title": "Master Difficult English Conversations: Conflict Resolution & Feedback Secrets!",
+    "duration_sec": 1484.232,
+    "turns_count": 168,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261022_082702"
   }
 ]
