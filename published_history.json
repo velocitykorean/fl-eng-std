@@ -128,5 +128,15 @@
     "duration_sec": 1376.6399999999999,
     "turns_count": 167,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261023_075639"
+  },
+  {
+    "episode": 14,
+    "date": "2026-10-24T08:02:08.891900",
+    "topic": "Mastering English for Networking Events: Connect and Impress",
+    "keyword": "NETWORKING",
+    "title": "Impress at Networking: Your English Elevator Pitch Secrets (Slow English)",
+    "duration_sec": 1444.728,
+    "turns_count": 167,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261024_073615"
   }
 ]
