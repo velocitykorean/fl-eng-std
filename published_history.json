@@ -138,5 +138,15 @@
     "duration_sec": 1444.728,
     "turns_count": 167,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261024_073615"
+  },
+  {
+    "episode": 15,
+    "date": "2026-10-25T08:10:08.779280",
+    "topic": "Mastering English for Academic Success: From Lectures to Late-Night Study Sessions",
+    "keyword": "ACADEMIC",
+    "title": "Master Academic English: Ace Lectures & Study Sessions! (English Fluency Studio)",
+    "duration_sec": 1635.8879999999988,
+    "turns_count": 170,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261025_074904"
   }
 ]
