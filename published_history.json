@@ -148,5 +148,15 @@
     "duration_sec": 1635.8879999999988,
     "turns_count": 170,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261025_074904"
+  },
+  {
+    "episode": 16,
+    "date": "2026-10-26T08:33:40.837433",
+    "topic": "Mastering English for Remote Work: Communicate Clearly from Anywhere",
+    "keyword": "REMOTE WORK",
+    "title": "Master English for REMOTE WORK: Speak Fluently from Anywhere! | English Fluency Studio",
+    "duration_sec": 1582.9199999999992,
+    "turns_count": 167,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261026_080725"
   }
 ]
