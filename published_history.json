@@ -158,5 +158,15 @@
     "duration_sec": 1582.9199999999992,
     "turns_count": 167,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261026_080725"
+  },
+  {
+    "episode": 17,
+    "date": "2026-10-27T08:52:39.703901",
+    "topic": "Mastering English for Casual Conversations: Beyond Small Talk",
+    "keyword": "CONVERSATION",
+    "title": "Stop Small Talk! Master Casual English CONVERSATION with Emma & Andrew | English Fluency Studio (Ep 17)",
+    "duration_sec": 1593.624000000001,
+    "turns_count": 170,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261027_082303"
   }
 ]
