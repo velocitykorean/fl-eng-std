@@ -168,5 +168,15 @@
     "duration_sec": 1593.624000000001,
     "turns_count": 170,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261027_082303"
+  },
+  {
+    "episode": 18,
+    "date": "2026-10-28T09:23:01.853946",
+    "topic": "Mastering English for Effective Feedback: Give and Receive Constructive Criticism",
+    "keyword": "FEEDBACK",
+    "title": "Master English: Give & Receive FEEDBACK Like a Native Speaker (Slow English Podcast)",
+    "duration_sec": 1386.6479999999985,
+    "turns_count": 169,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261028_085910"
   }
 ]
