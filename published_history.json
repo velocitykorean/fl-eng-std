@@ -178,5 +178,15 @@
     "duration_sec": 1386.6479999999985,
     "turns_count": 169,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261028_085910"
+  },
+  {
+    "episode": 19,
+    "date": "2026-10-29T09:13:33.600774",
+    "topic": "Mastering English Speaking and Natural Fluency (Vol. 19)",
+    "keyword": "FLUENCY",
+    "title": "Slow English Podcast - Mastering English Speaking and Natural Fluency (Vol. 19) | Episode 19",
+    "duration_sec": 1548.768000000001,
+    "turns_count": 170,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261029_085511"
   }
 ]
