@@ -188,5 +188,15 @@
     "duration_sec": 1548.768000000001,
     "turns_count": 170,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261029_085511"
+  },
+  {
+    "episode": 20,
+    "date": "2026-10-30T09:29:37.597810",
+    "topic": "Mastering English for Everyday Errands: Confidence Beyond the Classroom",
+    "keyword": "EVERYDAY LIFE",
+    "title": "Master English for Everyday Life: Order Coffee & Food with CONFIDENCE! | English Fluency Studio",
+    "duration_sec": 1358.6640000000002,
+    "turns_count": 168,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261030_085919"
   }
 ]
