@@ -198,5 +198,15 @@
     "duration_sec": 1358.6640000000002,
     "turns_count": 168,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261030_085919"
+  },
+  {
+    "episode": 21,
+    "date": "2026-10-31T09:16:00.567068",
+    "topic": "Mastering English for Everyday Errands: Confidence Beyond the Classroom",
+    "keyword": "ERRANDS",
+    "title": "Master Everyday English Errands: Order Coffee Like a Native! (Episode 21)",
+    "duration_sec": 1164.576,
+    "turns_count": 165,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261031_085222"
   }
 ]
