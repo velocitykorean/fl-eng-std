@@ -208,5 +208,15 @@
     "duration_sec": 1164.576,
     "turns_count": 165,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261031_085222"
+  },
+  {
+    "episode": 22,
+    "date": "2026-11-01T10:08:06.466352",
+    "topic": "Mastering English for Everyday Errands: Confidence Beyond the Classroom (Vol. 20)",
+    "keyword": "ERRANDS",
+    "title": "Speak English for Errands: Your Secret to Coffee Shop Confidence | English Fluency Studio",
+    "duration_sec": 1230.4080000000004,
+    "turns_count": 168,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261101_094242"
   }
 ]
