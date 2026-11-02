@@ -218,5 +218,15 @@
     "duration_sec": 1230.4080000000004,
     "turns_count": 168,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261101_094242"
+  },
+  {
+    "episode": 23,
+    "date": "2026-11-02T10:28:32.178170",
+    "topic": "Mastering English for Creative Professions: Articulate Your Vision",
+    "keyword": "CREATIVE",
+    "title": "Mastering Creative English: Articulate Your Vision (Episode 23)",
+    "duration_sec": 1460.2320000000002,
+    "turns_count": 163,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261102_095653"
   }
 ]
