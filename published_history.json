@@ -228,5 +228,15 @@
     "duration_sec": 1460.2320000000002,
     "turns_count": 163,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261102_095653"
+  },
+  {
+    "episode": 24,
+    "date": "2026-11-03T10:43:59.877104",
+    "topic": "Speak English Like a Pro on Zoom: Clear Updates, Confident Q&A, and No-Stress Follow-Ups",
+    "keyword": "ZOOM",
+    "title": "Speak English Like a Pro in ZOOM (Episode 24): Clear Updates + Confident Q&A + No-Stress Follow-Ups",
+    "duration_sec": 1912.3919999999996,
+    "turns_count": 182,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261103_100411"
   }
 ]
