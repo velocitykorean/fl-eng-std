@@ -114,7 +114,7 @@ def save_published_history(history: list):
         print(f"Warning: Failed to save published history: {e}")
 
 def generate_dynamic_topic(past_topics: list) -> dict:
-    """Uses Pollinations AI (gemini-fast) to invent a brand-new viral English learning topic and 5 acts."""
+    """Uses Pollinations AI (openai/gpt-5.4-nano) to invent a brand-new viral English learning topic and 5 acts."""
     api_key = os.getenv("POLLINATIONS_API_KEY")
     headers = {"Content-Type": "application/json"}
     if api_key:
@@ -145,7 +145,7 @@ OUTPUT ONLY valid JSON matching this schema:
             resp = requests.post(
                 "https://gen.pollinations.ai/v1/chat/completions",
                 json={
-                    "model": "gemini-fast",
+                    "model": "openai/gpt-5.4-nano",
                     "messages": [
                         {"role": "system", "content": "You are a JSON-only API. Return raw JSON."},
                         {"role": "user", "content": prompt}
@@ -234,7 +234,7 @@ Return ONLY clean JSON array:
             resp = requests.post(
                 "https://gen.pollinations.ai/v1/chat/completions",
                 json={
-                    "model": "gemini-fast",
+                    "model": "openai/gpt-5.4-nano",
                     "messages": [
                         {"role": "system", "content": "You are a professional ESL podcast scriptwriter. Return ONLY valid JSON array."},
                         {"role": "user", "content": prompt}
@@ -671,7 +671,7 @@ Return ONLY valid JSON, no markdown."""
     for attempt in range(3):
         try:
             resp = requests.post("https://gen.pollinations.ai/v1/chat/completions", json={
-                "model": "gemini-fast",
+                "model": "openai/gpt-5.4-nano",
                 "messages": [
                     {"role": "system", "content": "You are a YouTube SEO expert who creates viral titles and descriptions for the English Fluency Studio channel. You NEVER hallucinate statistics or make false claims. Return only valid JSON."},
                     {"role": "user", "content": prompt}
