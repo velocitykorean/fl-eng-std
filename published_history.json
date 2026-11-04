@@ -238,5 +238,15 @@
     "duration_sec": 1912.3919999999996,
     "turns_count": 182,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261103_100411"
+  },
+  {
+    "episode": 25,
+    "date": "2026-11-04T10:22:54.548653",
+    "topic": "Master English for Customer Service: Sound Polite, Clear, and Confident Every Time",
+    "keyword": "WORKPLACE",
+    "title": "English Fluency Studio EP25: Master English for Workplace Customer Service (Sound Polite & Confident)",
+    "duration_sec": 1725.2159999999997,
+    "turns_count": 168,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261104_095035"
   }
 ]
