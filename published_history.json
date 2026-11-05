@@ -248,5 +248,15 @@
     "duration_sec": 1725.2159999999997,
     "turns_count": 168,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261104_095035"
+  },
+  {
+    "episode": 26,
+    "date": "2026-11-05T10:26:15.236940",
+    "topic": "Master English Fluency for Conferences: Speak Clearly in Panels, Q&A, and Networking",
+    "keyword": "CONFERENCE",
+    "title": "Master English Fluency at a CONFERENCE: Speak Clearly in Panels, Q&A & Networking (Ep. 26)",
+    "duration_sec": 1948.368,
+    "turns_count": 182,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261105_095117"
   }
 ]
