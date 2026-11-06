@@ -258,5 +258,15 @@
     "duration_sec": 1948.368,
     "turns_count": 182,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261105_095117"
+  },
+  {
+    "episode": 27,
+    "date": "2026-11-06T10:36:18.356415",
+    "topic": "Master English for Workplace Updates: Say It Clearly, Sound Confident, Get Results",
+    "keyword": "WORKPLACE",
+    "title": "English Fluency Studio Episode 27: Master Workplace Updates—Say It Clearly & Sound Confident",
+    "duration_sec": 2051.0159999999983,
+    "turns_count": 196,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261106_095251"
   }
 ]
