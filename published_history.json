@@ -268,5 +268,15 @@
     "duration_sec": 2051.0159999999983,
     "turns_count": 196,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261106_095251"
+  },
+  {
+    "episode": 28,
+    "date": "2026-11-07T09:52:18.018073",
+    "topic": "Mastering English for Workplace Storytelling: Explain Problems, Win Trust, and Get Action",
+    "keyword": "WORKPLACE",
+    "title": "Slow English Podcast - Mastering English for Workplace Storytelling: Explain Problems, Win Trust, and Get Action | Episode 28",
+    "duration_sec": 1948.2239999999995,
+    "turns_count": 188,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261107_091545"
   }
 ]
