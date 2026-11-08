@@ -278,5 +278,15 @@
     "duration_sec": 1948.2239999999995,
     "turns_count": 188,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261107_091545"
+  },
+  {
+    "episode": 29,
+    "date": "2026-11-08T10:04:07.842236",
+    "topic": "Mastering English for Career Growth: Clear Confidence in Status Updates, Raises, and New Responsibilities",
+    "keyword": "WORKPLACE",
+    "title": "Master English at Work—Clear, Confident Workplace Updates for Raises & New Responsibilities",
+    "duration_sec": 1827.6960000000006,
+    "turns_count": 168,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261108_092812"
   }
 ]
