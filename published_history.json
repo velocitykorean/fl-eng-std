@@ -288,5 +288,15 @@
     "duration_sec": 1827.6960000000006,
     "turns_count": 168,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261108_092812"
+  },
+  {
+    "episode": 30,
+    "date": "2026-11-09T11:03:53.494395",
+    "topic": "Mastering English for Project Updates: Sound Clear, Confident, and On-Track Every Time",
+    "keyword": "WORKPLACE",
+    "title": "English Fluency Studio Episode 30: Secret Phrases for Workplace Project Updates That Keep You On-Track",
+    "duration_sec": 2010.0720000000003,
+    "turns_count": 188,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261109_102027"
   }
 ]
