@@ -298,5 +298,15 @@
     "duration_sec": 2010.0720000000003,
     "turns_count": 188,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261109_102027"
+  },
+  {
+    "episode": 31,
+    "date": "2026-11-10T11:05:16.782009",
+    "topic": "Mastering English for Professional Presence: Sound Confident Without Rambling",
+    "keyword": "WORKPLACE",
+    "title": "English Fluency Studio Episode 31: Master English for Workplace Confidence—No Rambling Greetings!",
+    "duration_sec": 1894.9200000000003,
+    "turns_count": 177,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261110_102414"
   }
 ]
