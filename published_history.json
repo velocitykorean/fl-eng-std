@@ -308,5 +308,15 @@
     "duration_sec": 1894.9200000000003,
     "turns_count": 177,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261110_102414"
+  },
+  {
+    "episode": 32,
+    "date": "2026-11-11T10:27:19.388103",
+    "topic": "Mastering English for Status Updates That Actually Get Results",
+    "keyword": "WORKPLACE",
+    "title": "Native-Sounding Workplace Updates in English: Done → Next → One Request (Episode 32) | English",
+    "duration_sec": 1987.1279999999995,
+    "turns_count": 184,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261111_095047"
   }
 ]
