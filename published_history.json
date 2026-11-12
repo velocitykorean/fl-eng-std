@@ -318,5 +318,15 @@
     "duration_sec": 1987.1279999999995,
     "turns_count": 184,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261111_095047"
+  },
+  {
+    "episode": 33,
+    "date": "2026-11-12T10:53:35.733494",
+    "topic": "Mastering Polite English for Difficult Conversations: Say It Clearly, Stay Calm, Get Results",
+    "keyword": "WORKPLACE",
+    "title": "Slow English Podcast - Mastering Polite English for Difficult Conversations: Say It Clearly, Stay Calm, Get Results | Episode 33",
+    "duration_sec": 1967.8320000000017,
+    "turns_count": 180,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261112_101829"
   }
 ]
