@@ -328,5 +328,15 @@
     "duration_sec": 1967.8320000000017,
     "turns_count": 180,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261112_101829"
+  },
+  {
+    "episode": 34,
+    "date": "2026-11-13T10:33:43.859166",
+    "topic": "Mastering English for Meetings: Ask Smart Questions, Speak Concisely, and Win Trust",
+    "keyword": "WORKPLACE",
+    "title": "Master English for Workplace Meetings: Ask Smart Questions + Speak Concisely (Episode 34)",
+    "duration_sec": 1940.9520000000005,
+    "turns_count": 180,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261113_095851"
   }
 ]
