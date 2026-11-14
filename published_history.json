@@ -338,5 +338,15 @@
     "duration_sec": 1940.9520000000005,
     "turns_count": 180,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261113_095851"
+  },
+  {
+    "episode": 35,
+    "date": "2026-11-14T10:06:18.499244",
+    "topic": "Master English for Networking Events: Small Talk to Strong Connections (Slow & Clear)",
+    "keyword": "WORKPLACE",
+    "title": "Master English for WORKPLACE Networking: Small Talk to Strong Connections (Slow & Clear) | Episode 35",
+    "duration_sec": 1783.9679999999996,
+    "turns_count": 179,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261114_092457"
   }
 ]
