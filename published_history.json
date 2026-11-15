@@ -348,5 +348,15 @@
     "duration_sec": 1783.9679999999996,
     "turns_count": 179,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261114_092457"
+  },
+  {
+    "episode": 36,
+    "date": "2026-11-15T10:32:43.632143",
+    "topic": "Master Slow English for Presentations: Speak Clearly, Calmly, and Persuasively (Even When You’re Nervous)",
+    "keyword": "WORKPLACE",
+    "title": "WORKPLACE Speaking Secret: Master Slow English for Presentations with Emma & Andrew (Episode 36) | English Fluency Studio",
+    "duration_sec": 1740.384,
+    "turns_count": 170,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261115_095432"
   }
 ]
