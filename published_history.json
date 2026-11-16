@@ -358,5 +358,15 @@
     "duration_sec": 1740.384,
     "turns_count": 170,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261115_095432"
+  },
+  {
+    "episode": 37,
+    "date": "2026-11-16T10:46:32.963260",
+    "topic": "Mastering English Fluency for Work Emails & Follow-Ups: Get Quick Replies Without Sounding Pushy",
+    "keyword": "WORKPLACE",
+    "title": "Slow English Podcast - Mastering English Fluency for Work Emails & Follow-Ups: Get Quick Replies Without Sounding Pushy | Episode 37",
+    "duration_sec": 1995.5040000000008,
+    "turns_count": 177,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261116_101031"
   }
 ]
