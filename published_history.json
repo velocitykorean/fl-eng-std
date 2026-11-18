@@ -378,5 +378,15 @@
     "duration_sec": 1815.8399999999997,
     "turns_count": 174,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261117_110837"
+  },
+  {
+    "episode": 39,
+    "date": "2026-11-18T11:33:49.008827",
+    "topic": "Master Slow English for Switching Topics in Meetings: Speak Smoothly Without Losing Your Train of Thought",
+    "keyword": "WORKPLACE",
+    "title": "Slow English Podcast - Master Slow English for Switching Topics in Meetings: Speak Smoothly Without Losing Your Train of Thought | Episode 39",
+    "duration_sec": 2154.695999999999,
+    "turns_count": 180,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261118_104419"
   }
 ]
