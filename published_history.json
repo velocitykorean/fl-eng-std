@@ -388,5 +388,15 @@
     "duration_sec": 2154.695999999999,
     "turns_count": 180,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261118_104419"
+  },
+  {
+    "episode": 40,
+    "date": "2026-11-19T11:23:32.954469",
+    "topic": "Speak Confident English at Work During Stressful Moments (Meetings, Deadlines, and Tough Questions)",
+    "keyword": "WORKPLACE",
+    "title": "English Fluency Studio Episode 40: Master Workplace English Under Pressure—“One Second,” “Let Me Check,” “I Hear You”",
+    "duration_sec": 1736.9760000000015,
+    "turns_count": 179,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261119_104503"
   }
 ]
