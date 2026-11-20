@@ -398,5 +398,15 @@
     "duration_sec": 1736.9760000000015,
     "turns_count": 179,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261119_104503"
+  },
+  {
+    "episode": 41,
+    "date": "2026-11-20T11:06:48.704848",
+    "topic": "Master Slow English for Daily Workplace Confidence: From Quick Updates to Clear Next Steps",
+    "keyword": "WORKPLACE",
+    "title": "Master Slow English for Workplace Confidence: the 15-Second Update Formula (Episode 41)",
+    "duration_sec": 1784.2559999999996,
+    "turns_count": 171,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261120_102926"
   }
 ]
