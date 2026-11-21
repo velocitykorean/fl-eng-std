@@ -408,5 +408,15 @@
     "duration_sec": 1784.2559999999996,
     "turns_count": 171,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261120_102926"
+  },
+  {
+    "episode": 42,
+    "date": "2026-11-21T10:50:49.281838",
+    "topic": "Master Slow Professional English for Salary Talks: Speak Clearly, Stay Calm, and Negotiate with Confidence",
+    "keyword": "WORKPLACE",
+    "title": "Slow English Podcast - Master Slow Professional English for Salary Talks: Speak Clearly, Stay Calm, and Negotiate with Confidence | Episode 42",
+    "duration_sec": 1900.9919999999988,
+    "turns_count": 176,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261121_101312"
   }
 ]
