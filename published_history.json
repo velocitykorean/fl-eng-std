@@ -418,5 +418,15 @@
     "duration_sec": 1900.9919999999988,
     "turns_count": 176,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261121_101312"
+  },
+  {
+    "episode": 43,
+    "date": "2026-11-22T10:45:07.804734",
+    "topic": "Master Slow English for Handling Unexpected Questions at Work (Stay Calm, Think Clearly, Speak Fluently)",
+    "keyword": "WORKPLACE",
+    "title": "Slow English Podcast - Master Slow English for Handling Unexpected Questions at Work (Stay Calm, Think Clearly, Speak Fluently) | Episode 43",
+    "duration_sec": 1815.1200000000006,
+    "turns_count": 179,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261122_101738"
   }
 ]
