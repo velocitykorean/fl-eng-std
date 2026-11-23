@@ -428,5 +428,15 @@
     "duration_sec": 1815.1200000000006,
     "turns_count": 179,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261122_101738"
+  },
+  {
+    "episode": 44,
+    "date": "2026-11-23T11:57:08.343211",
+    "topic": "Master Slow English for Cross-Team Collaboration: Align Fast, Speak Clearly, and Move Projects Forward",
+    "keyword": "WORKPLACE",
+    "title": "Master Slow English for WORKPLACE Cross-Team Collaboration (Episode 44) | Align Fast, Speak Clearly",
+    "duration_sec": 1794.9360000000001,
+    "turns_count": 175,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261123_111605"
   }
 ]
