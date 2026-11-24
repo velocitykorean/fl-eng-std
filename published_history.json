@@ -438,5 +438,15 @@
     "duration_sec": 1794.9360000000001,
     "turns_count": 175,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261123_111605"
+  },
+  {
+    "episode": 45,
+    "date": "2026-11-24T13:23:00.554141",
+    "topic": "Master Slow English for Quick Stand-Ups: Speak Clearly, Stay Focused, and Sound Confident",
+    "keyword": "WORKPLACE",
+    "title": "English Podcast Episode 45: Master Slow English for Workplace Stand-Ups (Speak Clearly & Confidently)",
+    "duration_sec": 1882.056,
+    "turns_count": 178,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261124_125651"
   }
 ]
