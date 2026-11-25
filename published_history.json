@@ -448,5 +448,15 @@
     "duration_sec": 1882.056,
     "turns_count": 178,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261124_125651"
+  },
+  {
+    "episode": 46,
+    "date": "2026-11-25T12:08:14.879848",
+    "topic": "Master Slow English for Office Conflicts: Speak Calmly, Protect Relationships, and Move Forward",
+    "keyword": "WORKPLACE",
+    "title": "English Fluency Studio: Master Slow English for Workplace Conflicts—Speak Calmly & Move Forward",
+    "duration_sec": 1592.256000000001,
+    "turns_count": 168,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261125_114418"
   }
 ]
