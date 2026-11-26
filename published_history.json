@@ -458,5 +458,15 @@
     "duration_sec": 1592.256000000001,
     "turns_count": 168,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261125_114418"
+  },
+  {
+    "episode": 47,
+    "date": "2026-11-26T11:57:56.158509",
+    "topic": "Master Slow English for “I Need Help” Moments: Ask Clearly, Sound Confident, Get Support",
+    "keyword": "WORKPLACE",
+    "title": "Secret Slow English Script: “I Need Help” for Workplace—Ask Clearly & Sound Confident (English)",
+    "duration_sec": 1839.8399999999992,
+    "turns_count": 180,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261126_112847"
   }
 ]
