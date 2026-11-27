@@ -468,5 +468,15 @@
     "duration_sec": 1839.8399999999992,
     "turns_count": 180,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261126_112847"
+  },
+  {
+    "episode": 48,
+    "date": "2026-11-27T11:53:01.250070",
+    "topic": "Master Slow English for Impromptu Speaking at Work: Sound Clear When You’re Put on the Spot",
+    "keyword": "WORKPLACE",
+    "title": "Secret Ten-Second Reset for Clear WORKPLACE English Speaking | Slow English Podcast Ep 48",
+    "duration_sec": 1760.6880000000003,
+    "turns_count": 175,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261127_112501"
   }
 ]
