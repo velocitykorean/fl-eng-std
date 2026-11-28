@@ -478,5 +478,15 @@
     "duration_sec": 1760.6880000000003,
     "turns_count": 175,
     "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261127_112501"
+  },
+  {
+    "episode": 49,
+    "date": "2026-11-28T11:15:31.264831",
+    "topic": "Mastering Slow English for Workplace Small Talk That Opens Real Opportunities",
+    "keyword": "WORKPLACE",
+    "title": "Mastering Slow English: WORKPLACE Small Talk That Opens Real Opportunities (English Fluency Studio) Episode 49",
+    "duration_sec": 1837.584,
+    "turns_count": 172,
+    "run_dir": "/home/runner/work/fl-eng-std/fl-eng-std/output/run_20261128_105302"
   }
 ]
